@@ -4,6 +4,9 @@ load_dotenv()
 from pathlib import Path
 import os
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,8 +21,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 #DEBUG = True
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
-#ALLOWED_HOSTS = ['*']  # For development purposes, change this in production
+#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
+ALLOWED_HOSTS = ['*']  # For development purposes, change this in production
 
 # Application definition
 
@@ -85,17 +88,17 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+#Database
+#https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+#DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -156,15 +159,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-#SESSION_COOKIE_AGE = 1800  # 30 min
 
-# # Stripe settings
-# STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-# STRIPE_SECRET_KEY_TEST = os.getenv("STRIPE_SECRET_KEY_TEST")
-# STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
-# STRIPE_PUBLIC_KEY_TEST = os.getenv("STRIPE_PUBLIC_KEY_TEST")    
-# STRIPE_ENDPOINT_SECRET = os.getenv("STRIPE_ENDPOINT_SECRET")
-# STRIPE_ENDPOINT_SECRET_TEST = os.getenv("STRIPE_ENDPOINT_SECRET_TEST")
 
 if os.getenv("DEBUG", "False") == "True":
     STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY_TEST")
@@ -188,8 +183,6 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = False
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 SENTRY_DSN = os.getenv("SENTRY_DSN_KEY")  
 
