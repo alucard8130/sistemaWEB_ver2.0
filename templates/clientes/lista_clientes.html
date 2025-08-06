@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- 
+        Created by: Jaime Estrada
+        Modified by: María Martínez
+        Date of creation: 05/06/2025
+        Date of modification: 30/06/2025
+        Description: Displays the list of clients
+    -->
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <!-- Bootstrap base styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Font Rubik -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+    <!-- Customised CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <!-- Dark button -->
+    <!-- <div class="navbar navbar-expand-lg sticky-top py-2 shadow-navbar">
+        <div class="d-flex align-items-center ms-auto">  
+            <button id="toggleDark" class="toggle-switch">
+                <div class="toggle-ball"><i class="bi bi-moon-fill"></i></div>
+            </button>
+        </div>
+    </div> -->
+    
+    <!-- Main content -->
+    <div class="container-fluid mt-4">
+        <h2>Clientes</h2>
+
+        <!-- Block for displaying messages -->
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+        <a href="{% url 'crear_cliente' %}" class="btn btn-crear mb-3">
+            <i class="bi bi-plus-circle me-1"></i>Nuevo cliente
+        </a>
+        <form method="get" class="mb-3 d-flex" role="search">
+            <input type="text" name="q" class="form-control me-2" placeholder="Buscar cliente por nombre o RFC" value="{{ q|default:'' }}">
+            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        </form>
+
+        <!-- Client table -->
+        <div class="table-responsive rounded-3 border"> 
+            <table class="table align-middle mb-0 shadow-sm">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>RFC</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        {% if request.user.is_superuser %}
+                            <th>Empresa</th> 
+                        {% endif %}
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td>{{ cliente.id }}</td>
+                        <td>{{ cliente.nombre }}</td>
+                        <td>{{ cliente.rfc }}</td>
+                        <td>{{ cliente.telefono }}</td>
+                        <td>{{ cliente.email }}</td>
+                        {% if request.user.is_superuser %}
+                            <td>{{ cliente.empresa.nombre }}</td>
+                        {% endif %}
+                        <td>{{ cliente.activo }}</td>
+                        <td class="text-nowrap">
+                            <a href="{% url 'editar_cliente' cliente.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a href="{% url 'eliminar_cliente' cliente.pk %}" class="btn btn-sm btn-outline-danger" title="Inactivar">
+                                <i class="bi bi-slash-circle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay clientes registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav aria-label="Paginación">
+                <ul class="pagination">
+                    {% if clientes.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ q }}&page={{ clientes.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                    {% endif %}
+                    <li class="page-item disabled"><span class="page-link">Página {{ clientes.number }} de {{ clientes.paginator.num_pages }}</span></li>
+                    {% if clientes.has_next %}
+                    <li class="page-item">   
+                        <a class="page-link" href="?q={{ q }}&page={{ clientes.next_page_number }}">Siguiente</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 🔹 Footer -->
+    <footer>
+        © {% now "Y" %} GAC. Todos los derechos reservados. <br>
+        Creado por Jaime M. Estrada Bernabé
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

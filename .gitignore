@@ -1,0 +1,42 @@
+# Entorno virtual
+venv/
+.env
+env/
+.venv/
+
+# Archivos de configuración y secretos
+*.env
+*.secret
+*.key
+
+# Archivos de base de datos local
+*.sqlite3
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+
+# Archivos de log
+*.log
+
+# Archivos temporales de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración personal
+.idea/
+.vscode/
+
+# Migraciones no deseadas (opcional)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+db.sqlite3
+
+.env
+
+# Django
+staticfiles/
+media/
+
+

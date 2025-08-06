@@ -1,0 +1,184 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- 
+        Created by: Jaime Estrada
+        Modified by: María Martínez
+        Date of creation: 05/06/2025
+        Date of modification: 25/07/2025
+        Description: Overdue invoices
+    -->
+    <meta charset="UTF-8">
+    <title>Reporte cartera vencida</title>
+    <!-- Bootstrap base styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Font Rubik -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+    <!-- Customised CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container-fluid mt-4">
+        <h2>Cartera vencida</h2>
+
+        <!-- Block for displaying messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="get" class="row g-2 mb-3">
+            {% if request.user.is_superuser %}
+            <div class="col-md-2">
+                <select name="empresa" id="empresa" class="form-select">
+                    <option value="">Empresas</option>
+                    {% for emp in empresas %}
+                        <option value="{{ emp.id }}" {% if request.GET.empresa == emp.id|stringformat:'s' %}selected{% endif %}>{{ emp.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+           <div class="col-md-2">
+                <select name="origen" id="origen" class="form-select">
+                    <option value="">Tipo de Cuota</option>
+                    <option value="local" {% if request.GET.origen == 'local' %}selected{% endif %}>Local Comercial</option>
+                    <option value="area" {% if request.GET.origen == 'area' %}selected{% endif %}>Área Común</option>
+                    <option value="otros" {% if request.GET.origen == 'otros' %}selected{% endif %}>Otros ingresos</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select name="cliente" id="cliente" class="form-select">
+                    <option value="">Clientes</option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}" {% if cliente.id|stringformat:"s" == request.GET.cliente %}selected{% endif %}>
+                            {{ cliente.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select name="rango" id="rango" class="form-select me-2">
+                <!--  <select name="dias" id="dias" class="form-select"> -->
+                    <option value="">Antigüedad</option>
+                    <option value="menor30" {% if rango_seleccionado == 'menor30' %}selected{% endif %}>Menos de 30 días</option>
+                    <option value="30a60" {% if rango_seleccionado == '30a60' %}selected{% endif %}>30 a 60 días</option>
+                    <option value="60a90" {% if rango_seleccionado == '60a90' %}selected{% endif %}>60 a 90 días</option>
+                    <option value="90a180" {% if rango_seleccionado == '90a180' %}selected{% endif %}>90 a 180 días</option>
+                    <option value="mas180" {% if rango_seleccionado == 'mas180' %}selected{% endif %}>Más de 180 días</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-funnel-fill"></i> Filtrar
+                </button>
+                <a href="{% url 'cartera_vencida' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i> Limpiar
+                </a>
+            </div>
+        </form>
+        <div class="mb-2"> 
+            <a href="{% url 'exportar_cartera_excel' %}?origen={{ request.GET.origen }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.cliente %}&cliente={{ request.GET.cliente }}{% endif %}{% if request.GET.dias %}&dias={{ request.GET.dias }}{% endif %}" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
+            </a>
+        </div>
+
+        <div class="table-responsive rounded-3 border">
+            <table class="table align-middle mb-0 shadow-sm">
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Cliente</th>
+                        {% if request.user.is_superuser %}
+                            <th>Empresa</th>
+                        {% endif %}
+                        <th>Local / Área</th>
+                        <th>Monto</th>
+                        <th>Saldo Pendiente</th>
+                        <th>Vencida desde</th>
+                        <th>Días vencidos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for factura in facturas %}
+                    <tr>
+                        <td>{{ factura.folio }}</td>
+                        <td>{{ factura.cliente.nombre }}</td>
+                        {% if request.user.is_superuser %}
+                            <td>{{ factura.empresa.nombre }}</td>
+                        {% endif %}
+                     <td>
+                        {% if factura.es_otro %}
+                            {% if factura.tipo_ingreso %}
+                                {{ factura.tipo_ingreso.nombre }}
+                            {% else %}
+                                Otra cuota
+                            {% endif %}
+                        {% elif factura.local %}
+                            {{ factura.local.numero }}
+                        {% elif factura.area_comun %}
+                            {{ factura.area_comun.numero }}
+                        {% else %}
+                            {{ factura.tipo_origen|title }}
+                        {% endif %}
+                    </td>
+                        <td>${{ factura.monto|floatformat:2|intcomma }}</td>
+                        <td>
+                            {% if factura.es_otro %}
+                                ${{ factura.saldo|floatformat:2|intcomma }}
+                            {% else %}
+                                ${{ factura.saldo_pendiente|floatformat:2|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>{{ factura.fecha_vencimiento|date:"d/b/y"|upper }}</td>
+                        <td>{{ factura.dias_vencidos }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8">No hay facturas vencidas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <nav aria-label="Paginación">
+            <ul class="pagination">
+            {% if facturas.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ facturas.previous_page_number }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.origen %}&origen={{ request.GET.origen }}{% endif %}{% if request.GET.cliente %}&cliente={{ request.GET.cliente }}{% endif %}{% if request.GET.rango %}&rango={{ request.GET.rango }}{% endif %}">Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Página {{ facturas.number }} de {{ facturas.paginator.num_pages }}</span></li>
+            {% if facturas.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ facturas.next_page_number }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.origen %}&origen={{ request.GET.origen }}{% endif %}{% if request.GET.cliente %}&cliente={{ request.GET.cliente }}{% endif %}{% if request.GET.rango %}&rango={{ request.GET.rango }}{% endif %}">Siguiente</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 🔹 Footer -->
+    <footer>
+        © {% now "Y" %} GAC. Todos los derechos reservados. <br>
+        Creado por Jaime M. Estrada Bernabé
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

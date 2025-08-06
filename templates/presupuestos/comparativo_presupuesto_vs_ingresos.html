@@ -1,0 +1,225 @@
+{% load static %}
+{% load humanize %}
+{% load math_filters %}
+{% load dict_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 
+      Created by: Jaime Estrada
+      Modified by: María Martínez
+      Date of creation: 29/07/2025
+      Date of modification: 29/07/2025
+      Description:  Budget vs revenue comparison report
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte comparativo presupuesto vs ingresos</title>
+    <!-- Bootstrap base styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 + DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css"/>
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Customised CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <style>
+        body { background: #f7f9fb; }
+        .header-bar { background: #22334d; color: #fff; padding: 18px 0; border-radius: 0 0 18px 18px; margin-bottom: 25px; box-shadow: 0 4px 18px 0 #00122b18;}
+        .logo-mini { height: 48px; margin-right: 14px; vertical-align: middle;}
+        .table-wrapper-corp { border-radius: 12px; box-shadow: 0 2px 10px 0 #22334d16; background: #fff; padding: 18px;}
+        h4.corp-title { color: #22334d; font-weight: 600; font-size: 1.35rem; letter-spacing: .02em; margin-bottom: 22px;}
+        td, th { vertical-align: middle !important; text-align: right;}
+        th, td:first-child, td:nth-child(2), td:nth-child(3) { text-align: left !important; }
+        .table > :not(caption) > * > * { border-bottom-width: 1.5px; }
+        .table-info, .table-primary, .table-warning { font-weight: bold; }
+        .table-info { background: #eaf3fa !important; }
+        .table-primary { background: #dde7fa !important; }
+        .table-warning { background: #fff8e1 !important; }
+        .neg { color: #b02a37; font-weight: 600; }
+        .pos { color: #198754; font-weight: 600; }
+        .neutro { color: #999; font-weight: 600; }
+        .flecha-mini { font-size: 1.1em; vertical-align: middle; margin-left: 2px; margin-right:2px;}
+        tr.data-row:hover { background: #f4f7fb !important; }
+        .dataTables_scrollBody { overflow-x: auto !important; }
+        .dataTables_wrapper { width: 100%; }
+        .dataTables_scroll { margin-bottom: 0 !important; }
+        .dt-top-scroll { overflow-x: auto;overflow-y: hidden; margin-bottom: 0;height: 18px;width: 100%;background: transparent; }
+        .dt-top-scroll-inner {height: 1px;}
+        .dttooltip { border-bottom: 1px dashed #555; cursor: help;}
+        .total-anual-cell { background: #f4f8fa; font-weight: 700; border-left: 2px solid #dee2e6;}
+    </style> -->
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container-fluid mt-4">
+        <h2>Reporte comparativo presupuesto Vs cuotas</h2>
+
+        <!-- <div class="table-wrapper-corp mb-3"> -->
+        <form method="get" class="row mb-3 g-2">
+            <div class="col-auto">
+                <select name="anio" onchange="this.form.submit()" class="form-select d-inline" style="width:auto;max-width:110px;">
+                    {% for a in anios %}
+                        <option value="{{ a }}" {% if a == anio %}selected{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                </select>
+                {% if empresas %}
+                    <select name="empresa" onchange="this.form.submit()" class="form-select d-inline" style="width:auto;max-width:260px;">
+                        {% for emp in empresas %}
+                            <option value="{{ emp.id }}" {% if emp.id == empresa.id %}selected{% endif %}>{{ emp.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+                <a class="btn btn-outline-success" href="?medicion={{ medicion }}&mes={{ meses.0 }}&excel=1">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
+                </a>
+            </div>
+        </form>
+
+        <form method="get" class="mb-3 d-flex align-items-center gap-2">
+            <select name="medicion" class="form-select" style="width:auto;">
+                <option value="mes" {% if medicion == "mes" %}selected{% endif %}>Mes actual</option>
+                <option value="curso" {% if medicion == "curso" %}selected{% endif %}>Periodo actual</option>
+                <option value="semestre1" {% if medicion == "semestre1" %}selected{% endif %}>Primer semestre</option>
+                <option value="semestre2" {% if medicion == "semestre2" %}selected{% endif %}>Segundo semestre</option>  
+                <option value="anual" {% if medicion == "anual" %}selected{% endif %}>Año completo</option>
+            </select>
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-search me-1"></i> Consultar
+            </button>
+        </form>
+            
+        <div class="table-responsive rounded-3 border" id="table-container-corp" data-meses-count="{{ meses_nombres|length }}">
+            <table class="table align-middle mb-0 shadow-sm">
+                <thead class="encabezado-claro">
+                    <tr>
+                        <th rowspan="2">Origen/Tipo</th>
+                        {% for mes_nombre in meses_nombres %}
+                            <th class="text-center" colspan="3">{{ mes_nombre|capfirst }}</th>
+                        {% endfor %}
+                        <th class="text-center" colspan="4">Total anual</th>
+                    </tr>
+                    <tr>
+                        {% for m in meses_nombres %}
+                            <th class="text-end">Presup.</th>
+                            <th class="text-end">Real</th>
+                            <th class="text-end">% Var.</th>
+                        {% endfor %}
+                        <th class="text-end">Presup.</th>
+                        <th class="text-end">Real</th>
+                        <th class="text-end">Var.</th>
+                        <th class="text-end">% Var.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in comparativo %}
+                    <tr {% if row.tipo == None and row.nombre == "Otros ingresos (Total)" %}class="table-info fw-bold"{% endif %}>
+                        <td>
+                            {% if row.tipo %}
+                                &nbsp;&nbsp;— {{ row.tipo }}
+                            {% else %}
+                                {{ row.nombre }}
+                            {% endif %}
+                        </td>
+                        {% for mes in row.meses %}
+                        <td class="text-end text-secondary" style="font-size:0.95em;">
+                            {{ mes.presupuesto|floatformat:2|intcomma }}
+                        </td>
+                        <td class="text-end fw-bold">
+                            {{ mes.real|floatformat:2|intcomma }}
+                        </td>
+                        <td class="text-end">
+                            {% if mes.presupuesto %}
+                                {{ mes.real|minus:mes.presupuesto|divide:mes.presupuesto|mul:100|floatformat:0 }}%
+                            {% elif mes.real %}
+                                100%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td class="total-anual-cell text-end text-secondary" style="font-size:0.95em;">
+                            {{ row.total_presup|floatformat:2|intcomma }}
+                        </td>
+                        <td class="total-anual-cell text-end fw-bold">
+                            {{ row.total_real|floatformat:2|intcomma }}
+                        </td>
+                        <td class="total-anual-cell text-end">
+                            {{ row.total_var|floatformat:2|intcomma }}
+                        </td>
+                        <td class="total-anual-cell text-end">
+                            {% if row.total_presup %}
+                                {{ row.total_var|divide:row.total_presup|mul:100|floatformat:0 }}%
+                            {% elif row.total_real %}
+                                100%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-secondary">
+                    <tr class="fw-bold">
+                        <th>Total general</th>
+                        {% for m in meses %}
+                        {% with mes_total=totales_meses|lookup:m %}
+                            <td class="text-end text-secondary" style="font-size:0.95em;">
+                                {{ mes_total.presupuesto|floatformat:2|intcomma }}
+                            </td>
+                            <td class="text-end fw-bold">
+                                {{ mes_total.real|floatformat:2|intcomma }}
+                            </td>
+                            <td class="text-end">
+                                {% if mes_total.presupuesto %}
+                                    {{ mes_total.variacion|divide:mes_total.presupuesto|mul:100|floatformat:0 }}%
+                                {% elif mes_total.real %}
+                                    100%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </td>
+                        {% endwith %}
+                        {% endfor %}
+                            <td class="total-anual-cell text-end text-secondary" style="font-size:0.95em;">
+                                {{ tot_anual.presupuesto|floatformat:2|intcomma }}
+                            </td>
+                            <td class="total-anual-cell text-end fw-bold">
+                                {{ tot_anual.real|floatformat:2|intcomma }}
+                            </td>
+                            <td class="total-anual-cell text-end">
+                                {{ tot_anual.variacion|floatformat:2|intcomma }}
+                            </td>
+                            <td class="total-anual-cell text-end">
+                                {% if tot_anual.presupuesto %}
+                                    {{ tot_anual.variacion|divide:tot_anual.presupuesto|mul:100|floatformat:0 }}%
+                                {% elif tot_anual.real %}
+                                    100%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- 🔹 Footer -->
+    <footer>
+        © {% now "Y" %} GAC. Todos los derechos reservados. <br>
+        Creado por Jaime M. Estrada Bernabé
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/presup_vs_ingresos.js' %}"></script>
+</body>
+</html>
