@@ -35,3 +35,20 @@ def generar_vale_caja(request):
     else:
         form = ValeCajaForm()
     return render(request, "caja_chica/generar_vale_caja.html", {"form": form})
+
+
+def lista_fondeos(request):
+    fondeos = FondeoCajaChica.objects.all()
+    return render(request, "caja_chica/lista_fondeos.html", {"fondeos": fondeos})
+
+
+def lista_gastos_caja_chica(request):
+    gastos = GastoCajaChica.objects.select_related("fondeo").all()
+    return render(
+        request, "caja_chica/lista_gastos_caja_chica.html", {"gastos": gastos}
+    )
+
+
+def lista_vales_caja_chica(request):
+    vales = ValeCaja.objects.select_related("fondeo").all()
+    return render(request, "caja_chica/lista_vales_caja_chica.html", {"vales": vales})

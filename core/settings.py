@@ -19,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-#DEBUG = True
-#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
-ALLOWED_HOSTS = ['*']  # For development purposes, change this in production
+#DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
+ALLOWED_HOSTS = ["*"]  # For development purposes, change this in production
 
 # Application definition
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "presupuestos",
     "informes_financieros",
     "storages",  # For AWS S3 storage
+    "caja_chica",  # Caja Chica app
 ]
 
 
@@ -88,17 +89,17 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-#Database
-#https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
-#DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
+# DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -147,8 +148,8 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -176,7 +177,9 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-1")  # Cambia si usas otra región
+    AWS_S3_REGION_NAME = os.getenv(
+        "AWS_S3_REGION_NAME", "us-east-1"
+    )  # Cambia si usas otra región
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
     AWS_LOCATION = "media"
@@ -184,11 +187,11 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_QUERYSTRING_AUTH = False
 
 
-SENTRY_DSN = os.getenv("SENTRY_DSN_KEY")  
+SENTRY_DSN = os.getenv("SENTRY_DSN_KEY")
 
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,  # Puedes bajarlo a 0.1 si no quieres rastreo de performance
-    send_default_pii=True,   # Para capturar datos de usuario autenticado
+    send_default_pii=True,  # Para capturar datos de usuario autenticado
 )

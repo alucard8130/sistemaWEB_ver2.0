@@ -1,203 +1,555 @@
-    <!-- 
+<!-- 
         Created by: Jaime Estrada
         Modified by: María Martínez
         Date of creation: 05/06/2025
         Date of modification: 25/07/2025
         Description: Code nabvar
     -->
-        
+
 <!-- 🔹 Top Navbar -->
 <nav class="navbar navbar-expand-lg sticky-top py-2 shadow-navbar">
-    <div class="container-fluid px-3">
-        <!-- home button-->
-        <a href="{% url 'bienvenida' %}"
-          class="btn btn-sm text-dark"
-          style="background-color: transparent; border: 1px solid transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: all 0.2s ease;"
-          onmouseover="this.style.borderColor='rgba(0, 123, 255, 0.4)'; this.style.boxShadow='0 0px 25px rgba(0, 123, 255, 0.3)';"
-          onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)';">
-          <i class="bi bi-house-fill me-1"></i> Inicio
-        </a>
+  <div class="container-fluid px-3">
+    <!-- home button-->
+    <a
+      href="{% url 'bienvenida' %}"
+      class="btn btn-sm text-dark"
+      style="
+        background-color: transparent;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+      "
+      onmouseover="this.style.borderColor='rgba(0, 123, 255, 0.4)'; this.style.boxShadow='0 0px 25px rgba(0, 123, 255, 0.3)';"
+      onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)';"
+    >
+      <i class="bi bi-house-fill me-1"></i> Inicio
+    </a>
 
-        <div class="collapse navbar-collapse d-flex justify-content-between align-items-center" id="navbarOpciones">
-            <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center ms-auto">
-                {% if request.user.is_superuser %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Configuración</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'empresa_lista' %}">Empresas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'admin:auth_user_add' %}">Usuarios</a></li>
-                        <li><a class="dropdown-item" href="{% url 'usuarios_demo' %}">Usuarios Demo</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_auditoria' %}">Auditoría</a></li>
-                        <li><a class="dropdown-item" href="{% url 'respaldo_empresa_excel' %}">BackUp</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reiniciar_sistema' %}">Reiniciar Sistema</a></li>
-                    </ul>
-                </li>
-                {% endif %}
-                
-                <!-- Menús existentes, ajústalos si quieres anidar en catálogos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'crear_cliente' %}">Nuevo Cliente</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_clientes' %}">Lista</a></li>
-                        <li><a class="dropdown-item" href="{% url 'clientes_inactivos' %}">Inactivos</a></li>
-                      <!--  {% if request.user.is_superuser %}
+    <div
+      class="collapse navbar-collapse d-flex justify-content-between align-items-center"
+      id="navbarOpciones"
+    >
+      <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center ms-auto">
+        {% if request.user.is_superuser %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Configuración</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'empresa_lista' %}"
+                >Empresas</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'admin:auth_user_add' %}"
+                >Usuarios</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'usuarios_demo' %}"
+                >Usuarios Demo</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'reporte_auditoria' %}"
+                >Auditoría</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'respaldo_empresa_excel' %}"
+                >BackUp</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'reiniciar_sistema' %}"
+                >Reiniciar Sistema</a
+              >
+            </li>
+          </ul>
+        </li>
+        {% endif %}
+
+        <!-- Menús existentes, ajústalos si quieres anidar en catálogos -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Clientes</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'crear_cliente' %}"
+                >Nuevo Cliente</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_clientes' %}"
+                >Lista</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'clientes_inactivos' %}"
+                >Inactivos</a
+              >
+            </li>
+            <!--  {% if request.user.is_superuser %}
                             <li><a class="dropdown-item" href="{% url 'carga_masiva_clientes' %}">Carga Masiva</a></li>
                         {% endif %}  -->
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Locales</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'crear_local' %}">Nuevo Local</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_locales' %}">Lista</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Locales</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'crear_local' %}"
+                >Nuevo Local</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_locales' %}"
+                >Lista</a
+              >
+            </li>
 
-                            <li><a class="dropdown-item" href="{% url 'locales_inactivos' %}">Inactivos</a></li>
+            <li>
+              <a class="dropdown-item" href="{% url 'locales_inactivos' %}"
+                >Inactivos</a
+              >
+            </li>
 
-                        <li><a class="dropdown-item" href="{% url 'incrementar_c_locales' %}">Incrementar Cuotas</a></li>
-                        
-                            <li><a class="dropdown-item" href="{% url 'carga_masiva_locales' %}">Carga Masiva</a></li>
-                        
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Áreas Comunes</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'crear_area' %}">Nueva Área</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_areas' %}">Lista</a></li>
-          
-                            <li><a class="dropdown-item" href="{% url 'areas_inactivas' %}">Inactivos</a></li>
+            <li>
+              <a class="dropdown-item" href="{% url 'incrementar_c_locales' %}"
+                >Incrementar Cuotas</a
+              >
+            </li>
 
-                        <li><a class="dropdown-item" href="{% url 'incrementar_c_areas' %}">Incrementar Cuotas</a></li>
-                        
-                            <li><a class="dropdown-item" href="{% url 'carga_masiva_areas' %}">Carga Masiva</a></li>
-                        
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Cuotas</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'crear_factura' %}">Registrar Cuota</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_facturas' %}">Lista Cuotas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'facturar_mes' %}">Carga Mensual Cuotas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'pagos_por_origen' %}?tipo=local">Reporte Cobros Cuotas</a></li>
-                        
-                        <li><a class="dropdown-item" href="{% url 'dashboard_pagos' %}">Dashboard</a></li>
-                        
-                        {% if request.user.is_superuser %}
-                        <!--    <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}">Carga Masiva</a></li> -->
-                            <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas_cobradas' %}">Carga Cuotas Cobradas</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-                <!-- MENÚ otros ingresos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Otras Cuotas</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'crear_factura_otros_ingresos' %}">Registrar otra Cuota</a></li>
-                        <li><a class="dropdown-item" href="{% url 'lista_facturas_otros_ingresos' %}">Lista otras Cuotas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_cobros_otros_ingresos' %}">Reporte Cobros otras Cuotas</a></li>
-                    </ul>
-                <!-- MENÚ cartera -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Cartera Vencida</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'cartera_vencida' %}">Cartera Vencida</a></li>
-             
-                        <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}">Carga Cartera</a></li>
-             
-                        
-                        <li><a class="dropdown-item" href="{% url 'dashboard_saldos' %}">Dashboard</a></li>
-                    </ul>
-                </li>
-                <!-- MENÚ CATÁLOGOS -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Catálogos</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'proveedor_lista' %}">Proveedores</a></li>
-                        <li><a class="dropdown-item" href="{% url 'empleado_lista' %}">Empleados</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        {% if request.user.is_superuser %}
-                            <li><a class="dropdown-item" href="{% url 'subgrupos_gasto_lista' %}">Alta subgrupo gasto</a></li>
-                        {% endif %}
-                        <li><a class="dropdown-item" href="{% url 'tipo_gasto_crear'%}">Alta tipo gasto</a></li>
-                        <li><a class="dropdown-item" href="{% url 'tipos_gasto_lista'%}">Lista tipo gasto</a></li>
-                        
-                        <!-- Agrega aquí más catálogos si lo deseas -->
-                    </ul>
-                </li>
-                <!-- MENÚ GASTOS -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Gastos</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'gasto_nuevo' %}">Registrar Gasto</a></li>
-                        <li><a class="dropdown-item" href="{% url 'gastos_lista' %}">Lista Gastos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_pagos_gastos' %}">Reporte Pagos Gastos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'dashboard_pagos_gastos' %}">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}">Fondeo Caja Chica</a></li>
-                        <li><a class="dropdown-item" href="{% url 'registrar_gasto_caja_chica' %}">Registrar Gasto Caja Chica</a></li>
-                        <li><a class="dropdown-item" href="{% url 'generar_vale_caja' %}">Generar Vale Caja</a></li>
-                        {% if request.user.is_superuser %}
-                            <li><a class="dropdown-item" href="{% url 'carga_masiva_gastos' %}">Carga Masiva Gastos</a></li>
-                
-                        {% endif %}
-                    </ul>
-                </li>
-                <!-- MENÚ PPTOS -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Presupuesto</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'matriz_presupuesto'%}">Matriz Presupuesto Gastos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'matriz_presupuesto_ingresos' %}">Matriz Presupuesto Cuotas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'carga_masiva_presupuestos' %}">Carga Presupuesto Gastos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'carga_masiva_presupuesto_ingresos' %}">Carga Presupuesto Cuotas</a></li>
-                    </ul>
-                </li>
-                <!-- MENÚ REPORTES -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Reportes</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'estado_resultados' %}">Estado Resultados</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_presupuesto_vs_gasto' %}">Comparativo Ppto vs Gastos</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_presupuesto_vs_ingreso' %}">Comparativo Ppto vs Cuotas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reporte_ingresos_vs_gastos' %}">Dashboard Cuotas y Gastos</a></li>
-                  
-                    </ul>
-            </ul>
-            <div class="d-flex align-items-center gap-3 ms-auto">
-                <!-- Help Button -->
-                <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" 
-                  data-bs-toggle="modal" data-bs-target="#modalAyuda"
-                  aria-label="Abrir ayuda">
-                  <i class="bi bi-question-circle-fill"></i>
-                  <span>Ayuda</span>
-                </button>
-              
-                <!-- Logout button -->
-                <form method="post" action="{% url 'logout' %}" class="mb-0">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-box-arrow-right me-1"></i> Salir
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-      <!-- Dark button -->
-    <div class="d-flex align-items-center ms-auto">  
-        <button id="toggleDark" class="toggle-switch">
-            <div class="toggle-ball"><i class="bi bi-moon-fill"></i></div>
+            <li>
+              <a class="dropdown-item" href="{% url 'carga_masiva_locales' %}"
+                >Carga Masiva</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Áreas Comunes</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'crear_area' %}"
+                >Nueva Área</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_areas' %}">Lista</a>
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'areas_inactivas' %}"
+                >Inactivos</a
+              >
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'incrementar_c_areas' %}"
+                >Incrementar Cuotas</a
+              >
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'carga_masiva_areas' %}"
+                >Carga Masiva</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Cuotas</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'crear_factura' %}"
+                >Registrar Cuota</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_facturas' %}"
+                >Lista Cuotas</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'facturar_mes' %}"
+                >Carga Mensual Cuotas</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'pagos_por_origen' %}?tipo=local"
+                >Reporte Cobros Cuotas</a
+              >
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'dashboard_pagos' %}"
+                >Dashboard</a
+              >
+            </li>
+
+            {% if request.user.is_superuser %}
+            <!--    <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}">Carga Masiva</a></li> -->
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'carga_masiva_facturas_cobradas' %}"
+                >Carga Cuotas Cobradas</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </li>
+        <!-- MENÚ otros ingresos -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Otras Cuotas</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'crear_factura_otros_ingresos' %}"
+                >Registrar otra Cuota</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'lista_facturas_otros_ingresos' %}"
+                >Lista otras Cuotas</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'reporte_cobros_otros_ingresos' %}"
+                >Reporte Cobros otras Cuotas</a
+              >
+            </li>
+          </ul>
+          <!-- MENÚ cartera -->
+        </li>
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Cartera Vencida</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'cartera_vencida' %}"
+                >Cartera Vencida</a
+              >
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}"
+                >Carga Cartera</a
+              >
+            </li>
+
+            <li>
+              <a class="dropdown-item" href="{% url 'dashboard_saldos' %}"
+                >Dashboard</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- MENÚ CATÁLOGOS -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Catálogos</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'proveedor_lista' %}"
+                >Proveedores</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'empleado_lista' %}"
+                >Empleados</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            {% if request.user.is_superuser %}
+            <li>
+              <a class="dropdown-item" href="{% url 'subgrupos_gasto_lista' %}"
+                >Alta subgrupo gasto</a
+              >
+            </li>
+            {% endif %}
+            <li>
+              <a class="dropdown-item" href="{% url 'tipo_gasto_crear'%}"
+                >Alta tipo gasto</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'tipos_gasto_lista'%}"
+                >Lista tipo gasto</a
+              >
+            </li>
+
+            <!-- Agrega aquí más catálogos si lo deseas -->
+          </ul>
+        </li>
+        <!-- MENÚ GASTOS -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Gastos</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'gasto_nuevo' %}"
+                >Registrar Gasto</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'gastos_lista' %}"
+                >Lista Gastos</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'reporte_pagos_gastos' %}"
+                >Reporte Pagos Gastos</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'dashboard_pagos_gastos' %}"
+                >Dashboard</a
+              >
+            </li>
+            {% if request.user.is_superuser %}
+            <li>
+              <a class="dropdown-item" href="{% url 'carga_masiva_gastos' %}"
+                >Carga Masiva Gastos</a
+              >
+            </li>
+
+            {% endif %}
+          </ul>
+        </li>
+        <!-- MENÚ CAJA CHICA -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Caja Chica</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}"
+                >Fondeo Caja Chica</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'registrar_gasto_caja_chica' %}"
+                >Registrar Gasto Caja Chica</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'generar_vale_caja' %}"
+                >Generar Vale Caja</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_fondeos' %}"
+                >Lista Fondeos</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'lista_gastos_caja_chica' %}"
+                >Lista Gastos Caja Chica</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'lista_vales_caja_chica' %}"
+                >Lista Vales Caja Chica</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- MENÚ PPTOS -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Presupuesto</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'matriz_presupuesto'%}"
+                >Matriz Presupuesto Gastos</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'matriz_presupuesto_ingresos' %}"
+                >Matriz Presupuesto Cuotas</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'carga_masiva_presupuestos' %}"
+                >Carga Presupuesto Gastos</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'carga_masiva_presupuesto_ingresos' %}"
+                >Carga Presupuesto Cuotas</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- MENÚ REPORTES -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            >Reportes</a
+          >
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'estado_resultados' %}"
+                >Estado Resultados</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'reporte_presupuesto_vs_gasto' %}"
+                >Comparativo Ppto vs Gastos</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'reporte_presupuesto_vs_ingreso' %}"
+                >Comparativo Ppto vs Cuotas</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'reporte_ingresos_vs_gastos' %}"
+                >Dashboard Cuotas y Gastos</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-3 ms-auto">
+        <!-- Help Button -->
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+          data-bs-toggle="modal"
+          data-bs-target="#modalAyuda"
+          aria-label="Abrir ayuda"
+        >
+          <i class="bi bi-question-circle-fill"></i>
+          <span>Ayuda</span>
         </button>
+
+        <!-- Logout button -->
+        <form method="post" action="{% url 'logout' %}" class="mb-0">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="bi bi-box-arrow-right me-1"></i> Salir
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
+  <!-- Dark button -->
+  <div class="d-flex align-items-center ms-auto">
+    <button id="toggleDark" class="toggle-switch">
+      <div class="toggle-ball"><i class="bi bi-moon-fill"></i></div>
+    </button>
+  </div>
 </nav>
 
-    <!-- Modal Ayuda -->
-<div class="modal fade" id="modalAyuda" tabindex="-1" aria-labelledby="modalAyudaLabel" aria-hidden="true">
+<!-- Modal Ayuda -->
+<div
+  class="modal fade"
+  id="modalAyuda"
+  tabindex="-1"
+  aria-labelledby="modalAyudaLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalAyudaLabel">Ayuda</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
       </div>
       <div class="modal-body">
         <h5 class="mb-3">Manual de Operación del Sistema GESAC</h5>
@@ -205,17 +557,33 @@
           <!-- Inicio de Sesión -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingLogin">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogin" aria-expanded="true" aria-controls="collapseLogin">
+              <button
+                class="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseLogin"
+                aria-expanded="true"
+                aria-controls="collapseLogin"
+              >
                 Inicio de Sesión
               </button>
             </h2>
-            <div id="collapseLogin" class="accordion-collapse collapse show" aria-labelledby="headingLogin" data-bs-parent="#ayudaAccordion">
+            <div
+              id="collapseLogin"
+              class="accordion-collapse collapse show"
+              aria-labelledby="headingLogin"
+              data-bs-parent="#ayudaAccordion"
+            >
               <div class="accordion-body">
                 <ol>
-                  <li>Ingresa tu usuario y contraseña en la pantalla principal.</li>
+                  <li>
+                    Ingresa tu usuario y contraseña en la pantalla principal.
+                  </li>
                   <li>Haz clic en <b>Iniciar sesión</b>.</li>
                   <li>Si los datos son correctos, accederás al sistema.</li>
-                  <li>Si olvidaste tu contraseña, contacta al administrador.</li>
+                  <li>
+                    Si olvidaste tu contraseña, contacta al administrador.
+                  </li>
                 </ol>
               </div>
             </div>
@@ -223,41 +591,117 @@
           <!-- Menú Principal -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingMenu">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenu" aria-expanded="false" aria-controls="collapseMenu">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseMenu"
+                aria-expanded="false"
+                aria-controls="collapseMenu"
+              >
                 Menú Principal
               </button>
             </h2>
-            <div id="collapseMenu" class="accordion-collapse collapse" aria-labelledby="headingMenu" data-bs-parent="#ayudaAccordion">
+            <div
+              id="collapseMenu"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingMenu"
+              data-bs-parent="#ayudaAccordion"
+            >
               <div class="accordion-body">
                 <ul>
-                  <li><b>Clientes:</b> Registra nuevos clientes, consulta la lista y administra su información.</li>
-                  <li><b>Locales:</b> Da de alta nuevos locales, consulta la lista, administra e incrementa las cuotas de mantenimiento por porcentaje de forma automatica.</li>
-                  <li><b>Áreas Comunes:</b> Administra las áreas comunes, crea nuevas y consulta las existentes, administra e incrementa las cuotas de areas por porcentaje de forma automatica.</li>
-                  <li><b>Cuotas:</b> Registra cuotas de mantenimiento y áreas , consulta el historial, registra la cobranza de las cuotas, 
-                    genera la carga mensual automatica de las cuotas, visualiza la cobranza de las cuotas mediante un reporte, e incluye un <strong>DASHBOARD</strong> que grafica las cuentas por cobrar,
-                    el presupuesto y la cobranza de las cuotas </li>
-                  <li><b>Otras Cuotas:</b>Registra ingresos adicionales distintos a las cuotas regulares, puedes crear nuevos tipos de otros ingresos como: Servicios(recuperacion de servicios),
-                        Intereses por inversiones, Por cobro de estacionamiento, ya sea operado o rentado, por cobro de sanitarios etc... cuenta con sus propios reportes de otros ingresos
-                        y reporte de su cobranza. </li>
-                  <li><b>Cartera Vencida:</b> Consulta adeudos pendientes de cuotas de mantenimiento, áreas comunes y otros ingresos por periodos de vencimiento (30, 60, 90 ....dias), cuenta con un reporte detallado de la cobranza,
-                        asi como un <strong>DASHBOARD</strong> que grafica los diferentes parámetros de la cartera vencida.</li>
-                  <li><b>Catálogos:</b> Registra proveedores, empleados y crea nuevos tipos de gasto de acuerdo al usuario y sus necesidades.
-                        Los tipos de gasto se crean en base a un catalogo de Grupo de Gastos y Subgrupos ya definido y precargado en el sistema, usted puede consultar dichos catalogos
-                        en la opcion <strong>Alta tipo de gasto, opcion subgrupos</strong> dentro del menu <strong>Catálogos</strong>, ahi usted podra consultar los diferentes Grupo de gasto
-                        y a partir de ahi el usuario podra crear nuevos tipos de gasto por ejemplo: <strong>Gastos Nomina/Sueldos/Sueldo Gerente Operativo</strong>, donde <strong>"Gastos Nomina/Sueldos"</strong>
-                        ya esta predefinida por el sistema y la parte que el usurio puede crear como tipo de gasto es <strong>Sueldo Gerente Operativo</strong>., a partir de ahi
-                        con el tipo de gasto creado, el usuario podra registrar gastos en base a este nuevo tipo de gasto.</li>
-                  <li><b>Gastos:</b> Registra y consulta solicitudes de gastos, registra el pago de gastos solicitados y consulta los pagos mediante un reporte, 
-                        asi mismo cuenta con un <strong>DASHBOARD</strong> que visualiza los pagos realizados, el presupuesto y los pagos pendientes (cxp).</li>
-                  <li><b>Presupuesto:</b> Administra presupuestos de ingresos y egresos, edita y guarda los cambios, cuenta con la opcion de cerrar el presupuesto:  hace que el presupuesto
-                    no pueda ser editado, opcion clonar presupuesto: clona el presupuesto actual y lo traspasa al siguiente periodo anual.
-                    Los presupuesto pueden crearse manualmente o mediante carga masiva.</li>
-                  <li><b>Reportes:</b> Estado de Resultados, con dos opciones de vizualizacion en base a Flujo y en base a Resultados, Reporte comparativo de Gastos vs Presupuesto,
-                    con opciones de vizualizacion por periodos, Reporte comparativo de Ingresos vs Presupuesto, con opciones de vizualizacion por periodos,
-                     y un <strong>DASHBOARD</strong> que grafica los resultados financieros por periodos.</li>
-                     <li><b>Calendario Eventos:</b> Permite visualizar y gestionar eventos importantes relacionados
-                         con el presupuesto y la cobranza de cuotas, facilitando la planificación y el seguimiento de actividades clave, como juntas de comité, juntas de asamblea, etc.
-                         Una vez registrado el evento, el usuario podrá enviar por correo la invitación.</li>
+                  <li>
+                    <b>Clientes:</b> Registra nuevos clientes, consulta la lista
+                    y administra su información.
+                  </li>
+                  <li>
+                    <b>Locales:</b> Da de alta nuevos locales, consulta la
+                    lista, administra e incrementa las cuotas de mantenimiento
+                    por porcentaje de forma automatica.
+                  </li>
+                  <li>
+                    <b>Áreas Comunes:</b> Administra las áreas comunes, crea
+                    nuevas y consulta las existentes, administra e incrementa
+                    las cuotas de areas por porcentaje de forma automatica.
+                  </li>
+                  <li>
+                    <b>Cuotas:</b> Registra cuotas de mantenimiento y áreas ,
+                    consulta el historial, registra la cobranza de las cuotas,
+                    genera la carga mensual automatica de las cuotas, visualiza
+                    la cobranza de las cuotas mediante un reporte, e incluye un
+                    <strong>DASHBOARD</strong> que grafica las cuentas por
+                    cobrar, el presupuesto y la cobranza de las cuotas
+                  </li>
+                  <li>
+                    <b>Otras Cuotas:</b>Registra ingresos adicionales distintos
+                    a las cuotas regulares, puedes crear nuevos tipos de otros
+                    ingresos como: Servicios(recuperacion de servicios),
+                    Intereses por inversiones, Por cobro de estacionamiento, ya
+                    sea operado o rentado, por cobro de sanitarios etc... cuenta
+                    con sus propios reportes de otros ingresos y reporte de su
+                    cobranza.
+                  </li>
+                  <li>
+                    <b>Cartera Vencida:</b> Consulta adeudos pendientes de
+                    cuotas de mantenimiento, áreas comunes y otros ingresos por
+                    periodos de vencimiento (30, 60, 90 ....dias), cuenta con un
+                    reporte detallado de la cobranza, asi como un
+                    <strong>DASHBOARD</strong> que grafica los diferentes
+                    parámetros de la cartera vencida.
+                  </li>
+                  <li>
+                    <b>Catálogos:</b> Registra proveedores, empleados y crea
+                    nuevos tipos de gasto de acuerdo al usuario y sus
+                    necesidades. Los tipos de gasto se crean en base a un
+                    catalogo de Grupo de Gastos y Subgrupos ya definido y
+                    precargado en el sistema, usted puede consultar dichos
+                    catalogos en la opcion
+                    <strong>Alta tipo de gasto, opcion subgrupos</strong> dentro
+                    del menu <strong>Catálogos</strong>, ahi usted podra
+                    consultar los diferentes Grupo de gasto y a partir de ahi el
+                    usuario podra crear nuevos tipos de gasto por ejemplo:
+                    <strong
+                      >Gastos Nomina/Sueldos/Sueldo Gerente Operativo</strong
+                    >, donde <strong>"Gastos Nomina/Sueldos"</strong> ya esta
+                    predefinida por el sistema y la parte que el usurio puede
+                    crear como tipo de gasto es
+                    <strong>Sueldo Gerente Operativo</strong>., a partir de ahi
+                    con el tipo de gasto creado, el usuario podra registrar
+                    gastos en base a este nuevo tipo de gasto.
+                  </li>
+                  <li>
+                    <b>Gastos:</b> Registra y consulta solicitudes de gastos,
+                    registra el pago de gastos solicitados y consulta los pagos
+                    mediante un reporte, asi mismo cuenta con un
+                    <strong>DASHBOARD</strong> que visualiza los pagos
+                    realizados, el presupuesto y los pagos pendientes (cxp).
+                  </li>
+                  <li>
+                    <b>Presupuesto:</b> Administra presupuestos de ingresos y
+                    egresos, edita y guarda los cambios, cuenta con la opcion de
+                    cerrar el presupuesto: hace que el presupuesto no pueda ser
+                    editado, opcion clonar presupuesto: clona el presupuesto
+                    actual y lo traspasa al siguiente periodo anual. Los
+                    presupuesto pueden crearse manualmente o mediante carga
+                    masiva.
+                  </li>
+                  <li>
+                    <b>Reportes:</b> Estado de Resultados, con dos opciones de
+                    vizualizacion en base a Flujo y en base a Resultados,
+                    Reporte comparativo de Gastos vs Presupuesto, con opciones
+                    de vizualizacion por periodos, Reporte comparativo de
+                    Ingresos vs Presupuesto, con opciones de vizualizacion por
+                    periodos, y un <strong>DASHBOARD</strong> que grafica los
+                    resultados financieros por periodos.
+                  </li>
+                  <li>
+                    <b>Calendario Eventos:</b> Permite visualizar y gestionar
+                    eventos importantes relacionados con el presupuesto y la
+                    cobranza de cuotas, facilitando la planificación y el
+                    seguimiento de actividades clave, como juntas de comité,
+                    juntas de asamblea, etc. Una vez registrado el evento, el
+                    usuario podrá enviar por correo la invitación.
+                  </li>
                 </ul>
               </div>
             </div>
@@ -265,15 +709,33 @@
           <!-- Ayuda -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingAyuda">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAyuda" aria-expanded="false" aria-controls="collapseAyuda">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseAyuda"
+                aria-expanded="false"
+                aria-controls="collapseAyuda"
+              >
                 Ayuda
               </button>
             </h2>
-            <div id="collapseAyuda" class="accordion-collapse collapse" aria-labelledby="headingAyuda" data-bs-parent="#ayudaAccordion">
+            <div
+              id="collapseAyuda"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingAyuda"
+              data-bs-parent="#ayudaAccordion"
+            >
               <div class="accordion-body">
                 <ul>
-                  <li>Haz clic en el botón <b>Ayuda</b> para consultar este manual en cualquier momento.</li>
-                  <li>Si tienes dudas adicionales, contacta al administrador del sistema.</li>
+                  <li>
+                    Haz clic en el botón <b>Ayuda</b> para consultar este manual
+                    en cualquier momento.
+                  </li>
+                  <li>
+                    Si tienes dudas adicionales, contacta al administrador del
+                    sistema.
+                  </li>
                 </ul>
               </div>
             </div>
@@ -281,28 +743,50 @@
           <!-- Cerrar Sesión -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingLogout">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogout" aria-expanded="false" aria-controls="collapseLogout">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseLogout"
+                aria-expanded="false"
+                aria-controls="collapseLogout"
+              >
                 Cerrar Sesión
               </button>
             </h2>
-            <div id="collapseLogout" class="accordion-collapse collapse" aria-labelledby="headingLogout" data-bs-parent="#ayudaAccordion">
+            <div
+              id="collapseLogout"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingLogout"
+              data-bs-parent="#ayudaAccordion"
+            >
               <div class="accordion-body">
                 <ol>
-                  <li>Haz clic en el botón <b>Salir</b> ubicado en la parte superior derecha.</li>
+                  <li>
+                    Haz clic en el botón <b>Salir</b> ubicado en la parte
+                    superior derecha.
+                  </li>
                   <li>Tu sesión se cerrará de forma segura.</li>
                 </ol>
               </div>
             </div>
           </div>
         </div>
-        <a href="https://paginaweb-ro9v.onrender.com" target="_blank"><p class="mt-3">Link para contactar al administrador del sistema.</p></a>
+        <a href="https://paginaweb-ro9v.onrender.com" target="_blank"
+          ><p class="mt-3">
+            Link para contactar al administrador del sistema.
+          </p></a
+        >
       </div>
       <div class="modal-footer">
         {% if not es_demo %}
-        <button id="cancelar-suscripcion-btn" class="btn btn-danger">Cancelar Suscripción</button>
+        <button id="cancelar-suscripcion-btn" class="btn btn-danger">
+          Cancelar Suscripción
+        </button>
         {% endif %}
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
       </div>
     </div>
   </div>
