@@ -531,7 +531,6 @@ def dashboard_pagos_gastos(request):
         )
         .prefetch_related("pagos")
     )
-  
 
     # PAGOS
     pagos = PagoGasto.objects.filter(gasto__in=gastos).select_related(
@@ -541,7 +540,6 @@ def dashboard_pagos_gastos(request):
         "gasto__empleado",
         "gasto__tipo_gasto",
     )
-   
 
     if forma_pago:
         pagos = pagos.filter(forma_pago=forma_pago)
@@ -550,7 +548,45 @@ def dashboard_pagos_gastos(request):
     if fecha_fin:
         pagos = pagos.filter(fecha_pago__lte=fecha_fin)
 
-  
+    # Caja chica y vales filtrados por tipo de gasto
+    from caja_chica.models import GastoCajaChica, ValeCaja
+
+    pagos_caja_chica = GastoCajaChica.objects.all()
+    vales_caja_chica = ValeCaja.objects.all()
+    if not es_super:
+        pagos_caja_chica = pagos_caja_chica.filter(
+            fondeo__empresa=request.user.perfilusuario.empresa
+        )
+        vales_caja_chica = vales_caja_chica.filter(
+            fondeo__empresa=request.user.perfilusuario.empresa
+        )
+    elif es_super and empresa_id:
+        pagos_caja_chica = pagos_caja_chica.filter(fondeo__empresa_id=empresa_id)
+        vales_caja_chica = vales_caja_chica.filter(fondeo__empresa_id=empresa_id)
+    if proveedor_id:
+        pagos_caja_chica = pagos_caja_chica.filter(proveedor_id=proveedor_id)
+    if tipo_gasto_id:
+        pagos_caja_chica = pagos_caja_chica.filter(tipo_gasto_id=tipo_gasto_id)
+        vales_caja_chica = vales_caja_chica.filter(tipo_gasto_id=tipo_gasto_id)
+    if empleado_id:
+        vales_caja_chica = (
+            vales_caja_chica.filter(
+                recibido_por=Empleado.objects.filter(pk=empleado_id).first().nombre
+            )
+            if Empleado.objects.filter(pk=empleado_id).exists()
+            else vales_caja_chica
+        )
+    if mes:
+        pagos_caja_chica = pagos_caja_chica.filter(fecha__month=mes)
+        vales_caja_chica = vales_caja_chica.filter(fecha__month=mes)
+    if fecha_inicio:
+        pagos_caja_chica = pagos_caja_chica.filter(fecha__gte=fecha_inicio)
+        vales_caja_chica = vales_caja_chica.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
+        pagos_caja_chica = pagos_caja_chica.filter(fecha__lte=fecha_fin)
+        vales_caja_chica = vales_caja_chica.filter(fecha__lte=fecha_fin)
+
+    # Sumar pagos normales, caja chica y vales por mes
     pagos_mes = (
         pagos.annotate(mes=ExtractMonth("fecha_pago"))
         .values("mes")
@@ -561,6 +597,28 @@ def dashboard_pagos_gastos(request):
     for p in pagos_mes:
         mes_idx = p["mes"] - 1
         pagos_mensuales[mes_idx] = float(p["total"])
+
+    # Sumar gastos de caja chica por mes
+    caja_chica_mes = (
+        pagos_caja_chica.annotate(mes=ExtractMonth("fecha"))
+        .values("mes")
+        .annotate(total=Sum("importe"))
+        .order_by("mes")
+    )
+    for c in caja_chica_mes:
+        mes_idx = c["mes"] - 1
+        pagos_mensuales[mes_idx] += float(c["total"])
+
+    # Sumar vales por mes
+    vales_mes = (
+        vales_caja_chica.annotate(mes=ExtractMonth("fecha"))
+        .values("mes")
+        .annotate(total=Sum("importe"))
+        .order_by("mes")
+    )
+    for v in vales_mes:
+        mes_idx = v["mes"] - 1
+        pagos_mensuales[mes_idx] += float(v["total"])
 
     # GASTOS POR MES (optimizado)
     gastos_por_mes = (
@@ -639,7 +697,6 @@ def dashboard_pagos_gastos(request):
     FORMAS_PAGO = PagoGasto._meta.get_field("forma_pago").choices
     grupos = GrupoGasto.objects.all()
     subgrupos = SubgrupoGasto.objects.all()
-    
 
     return render(
         request,

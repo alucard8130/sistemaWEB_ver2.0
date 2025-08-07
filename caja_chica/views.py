@@ -1,3 +1,9 @@
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import FondeoCajaChica, GastoCajaChica, ValeCaja
+from .forms import FondeoCajaChicaForm, GastoCajaChicaForm, ValeCajaForm
+
 def imprimir_vale_caja(request, vale_id):
     vale = get_object_or_404(ValeCaja, id=vale_id)
     return render(request, "caja_chica/imprimir_vale_caja.html", {"vale": vale})
@@ -17,15 +23,12 @@ def detalle_fondeo(request, fondeo_id):
     )
 
 
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import FondeoCajaChica, GastoCajaChica, ValeCaja
-from .forms import FondeoCajaChicaForm, GastoCajaChicaForm, ValeCajaForm
-
-
 def fondeo_caja_chica(request):
-    empresa = getattr(request.user, "empresa", None)
+    empresa = None
+    if request.user.is_authenticated:
+        perfil = getattr(request.user, "perfilusuario", None)
+        if perfil:
+            empresa = getattr(perfil, "empresa", None)
     if request.method == "POST":
         form = FondeoCajaChicaForm(request.POST)
         if form.is_valid():

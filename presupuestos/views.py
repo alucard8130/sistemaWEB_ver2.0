@@ -332,11 +332,11 @@ def matriz_presupuesto(request):
     # Guardado de presupuestos (solo si habilitado)
     if request.method == "POST" and edicion_habilitada:
         if not empresa:
-                        messages.error(
-                            request,
-                            "No hay empresa seleccionada. No se puede guardar el presupuesto de gastos.",
-                        )
-                        return redirect(request.path + f"?anio={anio}")  
+            messages.error(
+                request,
+                "No hay empresa seleccionada. No se puede guardar el presupuesto de gastos.",
+            )
+            return redirect(request.path + f"?anio={anio}")
         for tipo in tipos:
             for mes in meses:
                 key = f"presupuesto_{tipo.id}_{mes}"
@@ -539,6 +539,18 @@ def reporte_presupuesto_vs_gasto(request):
         .annotate(total=Sum("monto"))
     )
     gastos_dict = {(g["tipo_id"], g["mes_pago"]): float(g["total"]) for g in gastos}
+
+    # Sumar importes de caja chica por tipo de gasto y mes
+    from caja_chica.models import GastoCajaChica
+
+    gastos_caja_chica = (
+        GastoCajaChica.objects.filter(fondeo__empresa=empresa, fecha__year=anio)
+        .values("tipo_gasto_id", "fecha__month")
+        .annotate(total=Sum("importe"))
+    )
+    for g in gastos_caja_chica:
+        key = (g["tipo_gasto_id"], g["fecha__month"])
+        gastos_dict[key] = gastos_dict.get(key, 0) + float(g["total"])
 
     # Estructura: grupos > subgrupos > tipos > meses
     grupos_dict = defaultdict(lambda: defaultdict(list))
@@ -2121,12 +2133,13 @@ def copiar_presupuesto_gastos_a_nuevo_anio(request):
                 request, f"Ya existe presupuesto para el año {anio_nuevo}."
             )
             return redirect("matriz_presupuesto")
-        
-         # Verifica que haya datos capturados en el año actual
+
+        # Verifica que haya datos capturados en el año actual
         presupuestos_actuales = Presupuesto.objects.filter(anio=anio_actual)
         if not presupuestos_actuales.exists():
             messages.warning(
-                request, f"No hay datos capturados para el año {anio_actual}. No se puede clonar el presupuesto."
+                request,
+                f"No hay datos capturados para el año {anio_actual}. No se puede clonar el presupuesto.",
             )
             return redirect("matriz_presupuesto")
 
@@ -2194,15 +2207,15 @@ def copiar_presupuesto_ingresos_a_nuevo_anio(request):
                 request, f"Ya existe presupuesto de ingresos para el año {anio_nuevo}."
             )
             return redirect("matriz_presupuesto_ingresos")
-        
-         # Verifica que haya datos capturados en el año actual
+
+        # Verifica que haya datos capturados en el año actual
         presupuestos_actuales = PresupuestoIngreso.objects.filter(anio=anio_actual)
         if not presupuestos_actuales.exists():
             messages.warning(
-                request, f"No hay datos capturados para el año {anio_actual}. No se puede clonar el presupuesto."
+                request,
+                f"No hay datos capturados para el año {anio_actual}. No se puede clonar el presupuesto.",
             )
             return redirect("matriz_presupuesto_ingresos")
-
 
         tipo_clon = request.POST.get("tipo_clon", "sin")
         porcentaje = request.POST.get("porcentaje", "0")
