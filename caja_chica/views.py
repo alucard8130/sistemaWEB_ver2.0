@@ -79,8 +79,19 @@ def registrar_gasto_caja_chica(request):
 
 
 def generar_vale_caja(request):
+    from gastos.models import TipoGasto
+
+    empresa = None
+    if request.user.is_authenticated:
+        perfil = getattr(request.user, "perfilusuario", None)
+        if perfil:
+            empresa = getattr(perfil, "empresa", None)
     if request.method == "POST":
         form = ValeCajaForm(request.POST)
+        if empresa:
+            form.fields["tipo_gasto"].queryset = TipoGasto.objects.filter(
+                empresa=empresa
+            )
         if form.is_valid():
             vale = form.save(commit=False)
             fondeo = vale.fondeo
@@ -91,6 +102,10 @@ def generar_vale_caja(request):
             return redirect("lista_vales_caja_chica")
     else:
         form = ValeCajaForm()
+        if empresa:
+            form.fields["tipo_gasto"].queryset = TipoGasto.objects.filter(
+                empresa=empresa
+            )
     return render(request, "caja_chica/generar_vale_caja.html", {"form": form})
 
 

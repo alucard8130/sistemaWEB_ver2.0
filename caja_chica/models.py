@@ -34,6 +34,9 @@ class GastoCajaChica(models.Model):
 
 class ValeCaja(models.Model):
     fondeo = models.ForeignKey(FondeoCajaChica, on_delete=models.CASCADE)
+    tipo_gasto = models.ForeignKey(
+        "gastos.TipoGasto", on_delete=models.SET_NULL, null=True, blank=True
+    )
     descripcion = models.TextField()
     importe = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField()

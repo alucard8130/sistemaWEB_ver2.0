@@ -50,6 +50,7 @@ class ValeCajaForm(forms.ModelForm):
         model = ValeCaja
         fields = [
             "fondeo",
+            "tipo_gasto",
             "descripcion",
             "importe",
             "fecha",
@@ -60,6 +61,7 @@ class ValeCajaForm(forms.ModelForm):
             "fecha": forms.DateInput(attrs={"type": "date"}),
             "recibido_por": forms.TextInput(attrs={"class": "form-control"}),
             "autorizado_por": forms.TextInput(attrs={"class": "form-control"}),
+            "tipo_gasto": forms.Select(attrs={"class": "form-control"}),
         }
 
     fecha = forms.DateField(
