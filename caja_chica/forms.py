@@ -10,17 +10,58 @@ class FondeoCajaChicaForm(forms.ModelForm):
             "importe_cheque",
             "empleado_asignado",
             "fecha",
-            "saldo",
         ]
+        widgets = {
+            "fecha": forms.DateInput(attrs={"type": "date"}),
+            "empleado_asignado": forms.Select(attrs={"class": "form-control"}),
+            "numero_cheque": forms.TextInput(attrs={"class": "form-control"}),
+            "importe_cheque": forms.NumberInput(attrs={"class": "form-control"}),
+        }
+
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
 
 
 class GastoCajaChicaForm(forms.ModelForm):
     class Meta:
         model = GastoCajaChica
-        fields = ["fondeo", "descripcion", "importe", "fecha"]
+        fields = [
+            "fondeo",
+            "proveedor",
+            "tipo_gasto",
+            "descripcion",
+            "importe",
+            "fecha",
+        ]
+        widgets = {
+            "fecha": forms.DateInput(attrs={"type": "date"}),
+            "proveedor": forms.Select(attrs={"class": "form-control"}),
+            "tipo_gasto": forms.Select(attrs={"class": "form-control"}),
+        }
+
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
 
 
 class ValeCajaForm(forms.ModelForm):
     class Meta:
         model = ValeCaja
-        fields = ["fondeo", "descripcion", "importe", "fecha"]
+        fields = [
+            "fondeo",
+            "descripcion",
+            "importe",
+            "fecha",
+            "recibido_por",
+            "autorizado_por",
+        ]
+        widgets = {
+            "fecha": forms.DateInput(attrs={"type": "date"}),
+            "recibido_por": forms.TextInput(attrs={"class": "form-control"}),
+            "autorizado_por": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )

@@ -10,7 +10,7 @@
       Description: Register a new common area
     -->
     <meta charset="UTF-8">
-    <title>Registrar área</title>
+    <title>Lista</title>
     <!-- Bootstrap base styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap icons -->
@@ -24,6 +24,13 @@
     {% include 'navbar.html' %}
         <div class="container-fluid mt-4">
         <h2>Lista de Fondeos de Caja Chica</h2>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
     <div class="table-responsive rounded-3 border">        
     <table class="table align-middle mb-0 shadow-sm">
     <thead>        
@@ -33,17 +40,21 @@
     <th>Empleado Asignado</th>
     <th>Fecha</th>
     <th>Saldo</th>
+   <th>Acciones</th>
   </tr>
     </thead>
     <tbody>
   {% for fondeo in fondeos %}
   <tr>
-
     <td>{{ fondeo.numero_cheque }}</td>
     <td>{{ fondeo.importe_cheque }}</td>
     <td>{{ fondeo.empleado_asignado }}</td>
     <td>{{ fondeo.fecha }}</td>
     <td>{{ fondeo.saldo }}</td>
+   <td>
+     <a href="{% url 'detalle_fondeo' fondeo.id %}" class="btn btn-info btn-sm">Ver detalle</a>
+     <a href="{% url 'registrar_gasto_caja_chica' %}?fondeo_id={{ fondeo.id }}" class="btn btn-success btn-sm ms-1">Registrar gasto</a>
+   </td>
   </tr>
   {% empty %}
   <tr>

@@ -84,9 +84,9 @@
                             <th>Fecha</th>
                             <th>Tipo de Gasto</th>
                             <th>Proveedor/Empleado</th>
-                            <th>Descripción</th>
                             <th>Monto</th>
                             <th>Saldo</th>
+                            <th>Descripción</th>
                             <th>Status</th>
                             <th>Acciones</th>
                             <th>CFDI</th>
@@ -109,6 +109,7 @@
                             {% endif %}
                           <td>${{ gasto.monto|floatformat:2|intcomma }}</td>
                             <td>${{ gasto.saldo_restante|floatformat:2|intcomma }}</td>
+                            <td>{{ gasto.descripcion }}</td>
                             <td>{{ gasto.get_estatus_display }}</td>
                             <td class="text-nowrap">
                                 {% if gasto.saldo_restante > 0 %}

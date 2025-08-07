@@ -176,7 +176,6 @@
         </div>
         <div class="table-responsive">
             <table class="table table-bordered align-middle mb-0">
-                
                 <tbody>
                     {% for grupo, subgrupos in estructura_gastos.items %}
                         <tr>
@@ -196,6 +195,14 @@
                             {% endfor %}
                         {% endfor %}
                     {% endfor %}
+                    <tr class="table-light">
+                        <td class="text-start"><strong>Gastos de caja chica</strong></td>
+                        <td class="text-end"><strong>${{ total_gastos_caja_chica|floatformat:2|intcomma }}</strong></td>
+                    </tr>
+                    <tr class="table-light">
+                        <td class="text-start"><strong>Vales de caja chica</strong></td>
+                        <td class="text-end"><strong>${{ total_vales_caja_chica|floatformat:2|intcomma }}</strong></td>
+                    </tr>
                     <tr class="table-light">
                         <td class="text-start"><strong>Total gastos</strong></td>
                         <td class="text-end"><strong>${{ total_gastos|floatformat:2|intcomma }}</strong></td>

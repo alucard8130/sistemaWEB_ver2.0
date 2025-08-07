@@ -14,4 +14,12 @@ urlpatterns = [
         "lista_gastos/", views.lista_gastos_caja_chica, name="lista_gastos_caja_chica"
     ),
     path("lista_vales/", views.lista_vales_caja_chica, name="lista_vales_caja_chica"),
+    path(
+        "detalle_fondeo/<int:fondeo_id>/", views.detalle_fondeo, name="detalle_fondeo"
+    ),
+    path(
+        "imprimir_vale/<int:vale_id>/",
+        views.imprimir_vale_caja,
+        name="imprimir_vale_caja",
+    ),
 ]
