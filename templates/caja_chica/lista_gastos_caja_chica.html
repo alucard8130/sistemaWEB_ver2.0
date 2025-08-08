@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,7 +24,7 @@
   <body>
     {% include 'navbar.html' %}
         <div class="container-fluid mt-4">
-<h2>Lista de Gastos de Caja Chica</h2>
+<h2>Lista Gastos Caja Chica</h2>
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-success" role="alert">
@@ -35,7 +36,9 @@
     <table class="table align-middle mb-0 shadow-sm">
     <thead>        
   <tr>
-    <th>Fondo (Cheque)</th>
+    <th>Fondo</th>
+    <th>Proveedor</th>
+    <th>Tipo de Gasto</th>
     <th>Descripción</th>
     <th>Importe</th>
     <th>Fecha</th>
@@ -45,9 +48,11 @@
   {% for gasto in gastos %}
   <tr>
     <td>{{ gasto.fondeo.numero_cheque }}</td>
+    <td>{{ gasto.proveedor.nombre }}</td>
+    <td>{{ gasto.tipo_gasto }}</td>
     <td>{{ gasto.descripcion }}</td>
-    <td>{{ gasto.importe }}</td>
-    <td>{{ gasto.fecha }}</td>
+    <td>${{ gasto.importe|floatformat:2|intcomma }}</td>
+    <td>{{ gasto.fecha|date:"d/b/y"|upper }}</td>
   </tr>
   {% empty %}
   <tr>

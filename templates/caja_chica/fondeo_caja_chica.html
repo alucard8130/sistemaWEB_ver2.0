@@ -34,38 +34,35 @@
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-4 col-sm-6 mx-auto">
-          <h2>Fondeo de Caja Chica</h2>
+          <h2>Restitucion Caja Chica</h2>
           <form method="post">
             {% csrf_token %}
             <div class="row mb-3">
-              <div class="col-5 text-end">
+              
                 <label for="id_numero_cheque" class="form-label"
                   >Num. cheque o transfer</label
                 >
-              </div>
-              <div class="col-7">{{ form.numero_cheque }}</div>
+              {{ form.numero_cheque }}
             </div>
             <div class="row mb-3">
-              <div class="col-5 text-end">
+              
                 <label for="id_importe_cheque" class="form-label"
                   >Importe</label
                 >
-              </div>
-              <div class="col-7">{{ form.importe_cheque }}</div>
+              {{ form.importe_cheque }}
             </div>
             <div class="row mb-3">
-              <div class="col-5 text-end">
+             
                 <label for="id_empleado_asignado" class="form-label"
                   >Responsable</label
                 >
-              </div>
-              <div class="col-7">{{ form.empleado_asignado }}</div>
+              {{ form.empleado_asignado }}
             </div>
             <div class="row mb-3">
-              <div class="col-5 text-end">
+              
                 <label for="id_fecha" class="form-label">Fecha</label>
-              </div>
-              <div class="col-7">{{ form.fecha }}</div>
+              
+              {{ form.fecha }}
             </div>
             <button type="submit" class="btn btn-primary w-100">
               Registrar Fondeo

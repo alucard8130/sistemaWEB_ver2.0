@@ -384,26 +384,9 @@
             href="#"
             role="button"
             data-bs-toggle="dropdown"
-            >Caja Chica</a
+            >Caja</a
           >
           <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}"
-                >Fondeo Caja Chica</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'registrar_gasto_caja_chica' %}"
-                >Registrar Gasto Caja Chica</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'generar_vale_caja' %}"
-                >Generar Vale Caja</a
-              >
-            </li>
             <li>
               <a class="dropdown-item" href="{% url 'lista_fondeos' %}"
                 >Lista Fondeos</a
@@ -413,12 +396,29 @@
               <a
                 class="dropdown-item"
                 href="{% url 'lista_gastos_caja_chica' %}"
-                >Lista Gastos Caja Chica</a
+                >Lista Gastos</a
               >
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'lista_vales_caja_chica' %}"
-                >Lista Vales Caja Chica</a
+                >Lista Vales</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}"
+                >Fondear Caja Chica</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="{% url 'registrar_gasto_caja_chica' %}"
+                >Registro de Gasto</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'generar_vale_caja' %}"
+                >Registro de Vales</a
               >
             </li>
           </ul>

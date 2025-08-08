@@ -51,7 +51,6 @@
                             <div class="text-danger">{{ form.empleado.errors }}</div>
                         {% endif %}
                     </div>
-                    {# Recorremos los campos excepto proveedor y empleado para ponerlos personalizados abajo #}
                     {% for field in form %}
                         {% if field.name != "proveedor" and field.name != "empleado" and field.name != "origen_tipo" %}
                             {% if field.field.widget.input_type != "hidden" %}

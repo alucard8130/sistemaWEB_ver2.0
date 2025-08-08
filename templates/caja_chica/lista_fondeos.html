@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,7 +11,7 @@
       Description: Register a new common area
     -->
     <meta charset="UTF-8">
-    <title>Lista</title>
+    <title>Lista fondos caja chica</title>
     <!-- Bootstrap base styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap icons -->
@@ -23,7 +24,7 @@
   <body>
     {% include 'navbar.html' %}
         <div class="container-fluid mt-4">
-        <h2>Lista de Fondeos de Caja Chica</h2>
+        <h2>Lista Fondeos Caja chica</h2>
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-success" role="alert">
@@ -35,10 +36,10 @@
     <table class="table align-middle mb-0 shadow-sm">
     <thead>        
   <tr>
-    <th>Número de Cheque</th>
-    <th>Importe</th>
-    <th>Empleado Asignado</th>
+    <th>Cheque/Transfer</th>
     <th>Fecha</th>
+    <th>Importe</th>
+    <th>Responsable</th>
     <th>Saldo</th>
    <th>Acciones</th>
   </tr>
@@ -47,13 +48,16 @@
   {% for fondeo in fondeos %}
   <tr>
     <td>{{ fondeo.numero_cheque }}</td>
-    <td>{{ fondeo.importe_cheque }}</td>
+    <td>{{ fondeo.fecha |date:"d/b/y"|upper }}</td>
+    <td>${{ fondeo.importe_cheque|floatformat:2|intcomma }}</td>
     <td>{{ fondeo.empleado_asignado }}</td>
-    <td>{{ fondeo.fecha }}</td>
-    <td>{{ fondeo.saldo }}</td>
+    <td>${{ fondeo.saldo|floatformat:2|intcomma }}</td>
    <td>
-     <a href="{% url 'detalle_fondeo' fondeo.id %}" class="btn btn-info btn-sm">Ver detalle</a>
-     <a href="{% url 'registrar_gasto_caja_chica' %}?fondeo_id={{ fondeo.id }}" class="btn btn-success btn-sm ms-1">Registrar gasto</a>
+    <a href="{% url 'registrar_gasto_caja_chica' %}?fondeo_id={{ fondeo.id }}" class="btn btn-sm btn-outline-success" title="Registrar Gasto">
+                                        <i class="bi bi-cash-coin me-1"></i></a>
+     <a href="{% url 'detalle_fondeo' fondeo.id %}" class="btn btn-outline-info btn-sm" title="Ver Detalle">
+                                        <i class="bi bi-eye me-1"></i></a>
+     
    </td>
   </tr>
   {% empty %}

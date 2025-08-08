@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,7 +24,7 @@
   <body>
     {% include 'navbar.html' %}
         <div class="container-fluid mt-4">
-<h2>Lista de Vales de Caja Chica</h2>
+<h2>Lista Vales Caja Chica</h2>
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-success" role="alert">
@@ -35,7 +36,8 @@
     <table class="table align-middle mb-0 shadow-sm">
     <thead>        
   <tr>
-    <th>Fondo (Cheque)</th>
+    <th>Fondo</th>
+    <th>Tipo de Gasto</th>
     <th>Descripción</th>
     <th>Importe</th>
     <th>Fecha</th>
@@ -46,12 +48,13 @@
   {% for vale in vales %}
   <tr>
     <td>{{ vale.fondeo.numero_cheque }}</td>
+    <td>{{ vale.tipo_gasto }}</td>
     <td>{{ vale.descripcion }}</td>
-    <td>{{ vale.importe }}</td>
-    <td>{{ vale.fecha }}</td>
+    <td>${{ vale.importe|floatformat:2|intcomma }}</td>
+    <td>{{ vale.fecha|date:"d/b/y"|upper }}</td>
     <td>
       <a href="{% url 'imprimir_vale_caja' vale.id %}" class="btn btn-outline-primary btn-sm" target="_blank">
-        <i class="bi bi-printer"></i> Imprimir
+        <i class="bi bi-printer" title="Imprimir Vale"></i>
       </a>
     </td>
   </tr>

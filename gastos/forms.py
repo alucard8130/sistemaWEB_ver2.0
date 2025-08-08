@@ -75,6 +75,9 @@ class GastoForm(forms.ModelForm):
             'proveedor': forms.Select(attrs={
                 'class': 'form-select'
             }),
+            'empleado': forms.Select(attrs={
+                'class': 'form-select'
+            }),
             'empresa': forms.Select(attrs={
                 'class': 'form-select'
             }),
@@ -128,7 +131,8 @@ class GastoForm(forms.ModelForm):
      
           
         if modo == 'editar':
-            self.fields['origen_tipo'].disabled = True
+            #self.fields['origen_tipo'].disabled = True
+            #self.fields['origen_tipo'].widget = forms.HiddenInput()
             self.fields['proveedor'].disabled = True
 
         if user:

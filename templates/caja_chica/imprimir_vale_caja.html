@@ -26,16 +26,45 @@
           <p><strong>Descripción:</strong> {{ vale.descripcion }}</p>
           <p><strong>Importe:</strong> ${{ vale.importe }}</p>
           <p><strong>Fecha:</strong> {{ vale.fecha }}</p>
-          <p><strong>Recibido por:</strong> {{ vale.recibido_por }}</p>
-          <p><strong>Autorizado por:</strong> {{ vale.autorizado_por }}</p>
+          <div class="row mt-5 mb-4">
+            <div class="col-6 text-center">
+              <span style="display: block; margin-bottom: 2em"></span>
+              <div
+                style="
+                  border-bottom: 1px solid #333;
+                  width: 80%;
+                  margin: 0 auto 0.5em auto;
+                "
+              ></div>
+              <span style="font-size: 1em"
+                ><strong>Recibido por:</strong> {{ vale.recibido_por }}</span
+              >
+            </div>
+            <div class="col-6 text-center">
+              <span style="display: block; margin-bottom: 2em"></span>
+              <div
+                style="
+                  border-bottom: 1px solid #333;
+                  width: 80%;
+                  margin: 0 auto 0.5em auto;
+                "
+              ></div>
+              <span style="font-size: 1em"
+                ><strong>Autorizado por:</strong> {{ vale.autorizado_por }} </span
+              >
+            </div>
+          </div>
         </div>
       </div>
       <div class="text-center mt-3 no-print">
         <button onclick="window.print()" class="btn btn-primary">
           Imprimir Vale
         </button>
-        <a href="{% url 'lista_vales_caja_chica' %}" class="btn btn-secondary"
-          >Volver</a
+        <a
+          href="#"
+          class="btn btn-secondary"
+          onclick="window.close(); return false;"
+          >Cerrar</a
         >
       </div>
     </div>
