@@ -99,10 +99,10 @@
                         </td>
                         {% for mes in row.meses %}
                         <td class="text-end text-secondary" style="font-size:0.95em;">
-                            {{ mes.presupuesto|floatformat:2|intcomma }}
+                            {{ mes.presupuesto|floatformat:0|intcomma }}
                         </td>
                         <td class="text-end fw-bold">
-                            {{ mes.real|floatformat:2|intcomma }}
+                            {{ mes.real|floatformat:0|intcomma }}
                         </td>
                         <td class="text-end">
                             {% if mes.presupuesto %}
@@ -115,13 +115,13 @@
                         </td>
                         {% endfor %}
                         <td class="total-anual-cell text-end text-secondary" style="font-size:0.95em;">
-                            {{ row.total_presup|floatformat:2|intcomma }}
+                            {{ row.total_presup|floatformat:0|intcomma }}
                         </td>
                         <td class="total-anual-cell text-end fw-bold">
-                            {{ row.total_real|floatformat:2|intcomma }}
+                            {{ row.total_real|floatformat:0|intcomma }}
                         </td>
                         <td class="total-anual-cell text-end">
-                            {{ row.total_var|floatformat:2|intcomma }}
+                            {{ row.total_var|floatformat:0|intcomma }}
                         </td>
                         <td class="total-anual-cell text-end">
                             {% if row.total_presup %}
@@ -141,10 +141,10 @@
                         {% for m in meses %}
                         {% with mes_total=totales_meses|lookup:m %}
                             <td class="text-end text-secondary" style="font-size:0.95em;">
-                                {{ mes_total.presupuesto|floatformat:2|intcomma }}
+                                {{ mes_total.presupuesto|floatformat:0|intcomma }}
                             </td>
                             <td class="text-end fw-bold">
-                                {{ mes_total.real|floatformat:2|intcomma }}
+                                {{ mes_total.real|floatformat:0|intcomma }}
                             </td>
                             <td class="text-end">
                                 {% if mes_total.presupuesto %}
@@ -158,13 +158,13 @@
                         {% endwith %}
                         {% endfor %}
                             <td class="total-anual-cell text-end text-secondary" style="font-size:0.95em;">
-                                {{ tot_anual.presupuesto|floatformat:2|intcomma }}
+                                {{ tot_anual.presupuesto|floatformat:0|intcomma }}
                             </td>
                             <td class="total-anual-cell text-end fw-bold">
-                                {{ tot_anual.real|floatformat:2|intcomma }}
+                                {{ tot_anual.real|floatformat:0|intcomma }}
                             </td>
                             <td class="total-anual-cell text-end">
-                                {{ tot_anual.variacion|floatformat:2|intcomma }}
+                                {{ tot_anual.variacion|floatformat:0|intcomma }}
                             </td>
                             <td class="total-anual-cell text-end">
                                 {% if tot_anual.presupuesto %}
