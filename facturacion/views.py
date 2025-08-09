@@ -1651,7 +1651,7 @@ def exportar_pagos_excel(request):
                 pago.forma_pago,
                 factura.folio,
                 factura.empresa.nombre,
-                pago.fecha_pago.strftime("%Y-%m-%d"),
+                pago.fecha_pago,
             ]
         )
 
@@ -1829,8 +1829,7 @@ def exportar_lista_facturas_excel(request):
                 local_area,
                 float(factura.monto),
                 float(factura.saldo_pendiente),
-                # factura.fecha_emision.strftime('%Y-%m-%d'),
-                factura.fecha_vencimiento.strftime("%Y-%m-%d"),
+                factura.fecha_vencimiento,
                 factura.estatus,
                 factura.observaciones or "",
             ]
@@ -1912,12 +1911,6 @@ def carga_masiva_facturas_cobradas(request):
                     if area_val and not area:
                         errores.append(f"Fila {i}: No se encontró el área '{area_val}'")
                         continue
-
-                    # Buscar o crear cliente
-                    # cliente, _ = Cliente.objects.get_or_create(
-                    #   nombre=cliente_val,
-                    # 3  empresa=empresa
-                    # )
 
                     # Buscar o crear cliente (manejo de duplicados)
                     clientes = Cliente.objects.filter(
@@ -2348,7 +2341,7 @@ def exportar_cobros_otros_ingresos_excel(request):
     for cobro in cobros:
         ws.append(
             [
-                cobro.fecha_cobro.strftime("%Y-%m-%d"),
+                cobro.fecha_cobro,
                 cobro.factura.empresa.nombre,
                 cobro.factura.cliente.nombre,
                 cobro.factura.get_tipo_ingreso_display(),
@@ -2421,12 +2414,12 @@ def exportar_lista_facturas_otros_ingresos_excel(request):
                 factura.empresa.nombre,
                 factura.cliente.nombre,
                 str(factura.tipo_ingreso) if factura.tipo_ingreso else "",
-                # factura.get_tipo_ingreso_display() if hasattr(factura, 'get_tipo_ingreso_display') else factura.tipo_ingreso,
+            
                 float(factura.monto),
                 float(factura.saldo),
-                # factura.fecha_emision.strftime('%Y-%m-%d'),
+
                 (
-                    factura.fecha_vencimiento.strftime("%Y-%m-%d")
+                    factura.fecha_vencimiento
                     if factura.fecha_vencimiento
                     else ""
                 ),

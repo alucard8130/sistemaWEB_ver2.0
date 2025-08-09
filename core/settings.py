@@ -10,7 +10,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -19,8 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
+#DEBUG = True
 # ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
 ALLOWED_HOSTS = ["*"]  # For development purposes, change this in production
 
@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     "gastos",
     "presupuestos",
     "informes_financieros",
-    "storages",  # For AWS S3 storage
-    "caja_chica",  # Caja Chica app
+    "storages", 
+    "caja_chica",
 ]
 
 
@@ -85,8 +85,8 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+#MEDIA_URL = "/media/"
+#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Database
@@ -146,10 +146,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -177,12 +175,9 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_REGION_NAME = os.getenv(
-        "AWS_S3_REGION_NAME", "us-east-1"
-    )  # Cambia si usas otra región
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-2")
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-    AWS_LOCATION = "media"
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = False
 
