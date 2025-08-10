@@ -300,7 +300,7 @@ def gasto_eliminar(request, pk):
 def registrar_pago_gasto(request, gasto_id):
     gasto = get_object_or_404(Gasto, pk=gasto_id)
     pagos = gasto.pagos.all()
-    saldo_restante = gasto.monto - sum([p.monto for p in pagos])
+    saldo_restante = round(gasto.monto - sum([round(p.monto, 2) for p in pagos]), 2)
 
     if request.method == "POST":
         form = PagoGastoForm(request.POST, request.FILES)
@@ -308,6 +308,7 @@ def registrar_pago_gasto(request, gasto_id):
             pago = form.save(commit=False)
             pago.gasto = gasto
             pago.registrado_por = request.user
+            pago.monto = round(pago.monto, 2)
             if pago.monto > saldo_restante:
                 form.add_error(
                     "monto",

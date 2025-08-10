@@ -10,7 +10,7 @@
       Description: Record collections
     -->
     <meta charset="UTF-8" />
-    <title>Registrar cobros</title>
+    <title>Registrar cobros cuotas</title>
     <!-- Bootstrap base styles -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -74,7 +74,7 @@
                 <span class="float-end text-dark">
                   ${{ saldo|floatformat:2|intcomma }}</span
                 >
-              </div>
+         
             </div>
             {% csrf_token %}
             <div class="mb-3">
@@ -85,8 +85,8 @@
                   id="pagar_total"
                   onclick="toggleMontoTotal()"
                 />
-                <label class="form-check-label" for="pagar_total"
-                  >Pagar saldo total</label
+                <label class="form-check-label" style="cursor: pointer;" for="pagar_total"
+                  >Cobrar saldo total</label
                 >
               </div>
             </div>
