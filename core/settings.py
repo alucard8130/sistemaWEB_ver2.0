@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "presupuestos",
     "informes_financieros",
     "storages",
-    "debug_toolbar",  # Debug toolbar for development
+    #"debug_toolbar",  # Debug toolbar for development
     "caja_chica",
 ]
 
@@ -56,7 +56,7 @@ INTERNAL_IPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+   #"debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
