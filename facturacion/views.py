@@ -251,10 +251,10 @@ def lista_facturas(request):
     )
 
 
-
 @login_required
 def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
-    # Permitir seleccionar año y mes por GET o POST (solo superusuario puede facturar meses anteriores)
+    max_folio_deposito = {}
+    # Permitir seleccionar año y mes por GET o POST
     if request.method == "POST":
         año = int(request.POST.get("anio", datetime.now().year))
         mes = int(request.POST.get("mes", datetime.now().month))
@@ -263,22 +263,21 @@ def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
         mes = int(request.GET.get("mes", datetime.now().month))
     hoy = date.today()
 
-    # Solo superusuario puede facturar meses distintos al actual
-    # if (año != hoy.year or mes != hoy.month) and not request.user.is_superuser:
-    #     messages.error(request, "Solo el superusuario puede generar facturas de meses anteriores.")
-    #     return redirect('confirmar_facturacion')
-
     facturas_creadas = 0
     facturas_a_crear = []
 
     if request.user.is_superuser:
         locales = (
-            LocalComercial.objects.filter(activo=True, cliente__isnull=False)
+            LocalComercial.objects.filter(
+                activo=True, cliente__isnull=False
+            ).select_related("cliente", "empresa")
             if facturar_locales
             else []
         )
         areas = (
-            AreaComun.objects.filter(activo=True, cliente__isnull=False)
+            AreaComun.objects.filter(activo=True, cliente__isnull=False).select_related(
+                "cliente", "empresa"
+            )
             if facturar_areas
             else []
         )
@@ -287,14 +286,14 @@ def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
         locales = (
             LocalComercial.objects.filter(
                 empresa=empresa, activo=True, cliente__isnull=False
-            )
+            ).select_related("cliente", "empresa")
             if facturar_locales
             else []
         )
         areas = (
             AreaComun.objects.filter(
                 empresa=empresa, activo=True, cliente__isnull=False
-            )
+            ).select_related("cliente", "empresa")
             if facturar_areas
             else []
         )
@@ -318,16 +317,26 @@ def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
         ).values_list("empresa_id", "folio")
     )
 
+    # Precarga facturas existentes para evitar N+1 queries
+    facturas_locales_existentes = set(
+        Factura.objects.filter(
+            fecha_emision__year=año,
+            fecha_emision__month=mes,
+            local__in=[l.pk for l in locales],
+        ).values_list("cliente_id", "local_id")
+    )
+    facturas_areas_existentes = set(
+        Factura.objects.filter(
+            fecha_emision__year=año,
+            fecha_emision__month=mes,
+            area_comun__in=[a.pk for a in areas],
+        ).values_list("cliente_id", "area_comun_id")
+    )
+
     # Locales
     max_folio_local = {}
     for local in locales:
-        existe = Factura.objects.filter(
-            cliente=local.cliente,
-            local=local,
-            fecha_emision__year=año,
-            fecha_emision__month=mes,
-        ).exists()
-        if not existe:
+        if (local.cliente_id, local.pk) not in facturas_locales_existentes:
             empresa_id = local.empresa_id
             if empresa_id not in max_folio_local:
                 max_folio = Factura.objects.filter(
@@ -361,15 +370,8 @@ def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
 
     # Áreas
     max_folio_area = {}
-    max_folio_deposito = {}
     for area in areas:
-        existe = Factura.objects.filter(
-            cliente=area.cliente,
-            area_comun=area,
-            fecha_emision__year=año,
-            fecha_emision__month=mes,
-        ).exists()
-        if not existe:
+        if (area.cliente_id, area.pk) not in facturas_areas_existentes:
             empresa_id = area.empresa_id
             if empresa_id not in max_folio_area:
                 max_folio = Factura.objects.filter(
@@ -394,7 +396,7 @@ def facturar_mes_actual(request, facturar_locales=True, facturar_areas=True):
                     fecha_emision=fecha_factura,
                     fecha_vencimiento=fecha_factura,
                     monto=area.cuota,
-                    tipo_cuota="renta",
+                    tipo_cuota="mantenimiento",
                     estatus="pendiente",
                     observaciones="emision mensual",
                 )
@@ -1001,7 +1003,7 @@ def dashboard_saldos(request):
     )
 
 
-@login_required
+
 # pagos.html
 # dashboard cuotas
 @login_required
@@ -2414,15 +2416,9 @@ def exportar_lista_facturas_otros_ingresos_excel(request):
                 factura.empresa.nombre,
                 factura.cliente.nombre,
                 str(factura.tipo_ingreso) if factura.tipo_ingreso else "",
-            
                 float(factura.monto),
                 float(factura.saldo),
-
-                (
-                    factura.fecha_vencimiento
-                    if factura.fecha_vencimiento
-                    else ""
-                ),
+                (factura.fecha_vencimiento if factura.fecha_vencimiento else ""),
                 factura.estatus,
                 factura.observaciones or "",
             ]

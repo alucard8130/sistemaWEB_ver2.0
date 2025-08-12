@@ -55,19 +55,6 @@ class Factura(models.Model):
         if self.estatus in ('cobrada', 'pendiente'):
             return float(self.monto) - float(self.total_pagado)
         return 0
-    """@property
-    def saldo_pendiente(self):
-        if  self.estatus == 'cancelada':
-            return 0
-        if self.estatus == 'cobrada' or 'pendiente':
-            return self.monto - self.total_pagado"""
-    
-    """def actualizar_estatus(self):
-        if self.saldo_pendiente <= 0:
-            self.estatus = 'cobrada'
-        else:
-            self.estatus = 'pendiente'
-        self.save()"""
 
     def actualizar_estatus(self):
         #cambie el codigo para ver si funciona y pone bien el estado

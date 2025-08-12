@@ -10,7 +10,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
-#DEBUG = True
+# DEBUG = True
 # ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "adminsoftheron.onrender.com").split(",")
 ALLOWED_HOSTS = ["*"]  # For development purposes, change this in production
 
@@ -45,12 +45,18 @@ INSTALLED_APPS = [
     "gastos",
     "presupuestos",
     "informes_financieros",
-    "storages", 
+    "storages",
+    "debug_toolbar",  # Debug toolbar for development
     "caja_chica",
 ]
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -85,22 +91,29 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-#MEDIA_URL = "/media/"
-#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
+
+#heroku
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
+}
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")

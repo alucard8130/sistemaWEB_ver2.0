@@ -1,4 +1,3 @@
-
 # Create your models here.
 from django.db import models
 from django.db.models import Sum
@@ -9,24 +8,28 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 
-
 class GrupoGasto(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nombre
 
+
 class SubgrupoGasto(models.Model):
-    grupo = models.ForeignKey('GrupoGasto', on_delete=models.CASCADE, related_name='subgrupos')
+    grupo = models.ForeignKey(
+        "GrupoGasto", on_delete=models.CASCADE, related_name="subgrupos"
+    )
     nombre = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.grupo.nombre}/{self.nombre}"
- 
-    
+
+
 class TipoGasto(models.Model):
-    empresa= models.ForeignKey(Empresa, on_delete=models.CASCADE)
-    subgrupo = models.ForeignKey(SubgrupoGasto, on_delete=models.CASCADE, related_name='tipos')
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    subgrupo = models.ForeignKey(
+        SubgrupoGasto, on_delete=models.CASCADE, related_name="tipos"
+    )
     nombre = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=255, blank=True)
 
@@ -35,67 +38,81 @@ class TipoGasto(models.Model):
 
 
 class Gasto(models.Model):
-    empresa = models.ForeignKey(Empresa,on_delete=models.CASCADE,null=True,blank=True)
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True, blank=True)
-    empleado = models.ForeignKey(Empleado, on_delete=models.SET_NULL, null=True, blank=True)
+    empresa = models.ForeignKey(
+        Empresa, on_delete=models.CASCADE, null=True, blank=True
+    )
+    proveedor = models.ForeignKey(
+        Proveedor, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    empleado = models.ForeignKey(
+        Empleado, on_delete=models.SET_NULL, null=True, blank=True
+    )
     tipo_gasto = models.ForeignKey(TipoGasto, on_delete=models.PROTECT)
     descripcion = models.CharField(max_length=255, blank=True)
     fecha = models.DateField()
     monto = models.DecimalField(max_digits=12, decimal_places=2)
-    comprobante = models.FileField(upload_to='cfdi_gastos/', blank=True, null=True)
+    comprobante = models.FileField(upload_to="cfdi_gastos/", blank=True, null=True)
     STATUS_CHOICES = [
-        ('pendiente', 'Pendiente'),
-        ('pagada', 'Pagada'),
-        ('cancelada', 'Cancelada'),
+        ("pendiente", "Pendiente"),
+        ("pagada", "Pagada"),
+        ("cancelada", "Cancelada"),
     ]
-    estatus = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
+    estatus = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="pendiente"
+    )
     observaciones = models.TextField(blank=True, null=True)
     retencion_iva = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     retencion_isr = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     def __str__(self):
-        return f"{self.fecha} - {self.tipo_gasto} - ${self.monto}"  
+        return f"{self.fecha} - {self.tipo_gasto} - ${self.monto}"
 
     @property
     def total_pagado(self):
-        return sum(p.monto for p in self.pagos.all())
+        pagos = getattr(self, "_prefetched_objects_cache", {}).get("pagos")
+        if pagos is not None:
+            return sum(p.monto for p in pagos)
+        return self.pagos.aggregate(total=Sum("monto"))["total"] or 0
 
     @property
     def saldo_restante(self):
-        total_pagado = self.pagos.aggregate(total=Sum('monto'))['total'] or 0
-        return self.monto - total_pagado
+        return self.monto - self.total_pagado
 
-    
     def actualizar_estatus(self):
-        total_pagado = self.pagos.aggregate(total=Sum('monto'))['total'] or 0
+        total_pagado = self.pagos.aggregate(total=Sum("monto"))["total"] or 0
         if total_pagado >= self.monto:
-            self.estatus = 'pagada'
+            self.estatus = "pagada"
         elif total_pagado == 0:
-            self.estatus = 'pendiente'
+            self.estatus = "pendiente"
         else:
-            self.estatus = 'pendiente'  # O podrías poner un "parcial" si agregas esa opción
+            self.estatus = (
+                "pendiente"  # O podrías poner un "parcial" si agregas esa opción
+            )
         self.save()
-   
-        
+
 
 class PagoGasto(models.Model):
-    gasto = models.ForeignKey('Gasto', on_delete=models.CASCADE, related_name='pagos')
+    gasto = models.ForeignKey("Gasto", on_delete=models.CASCADE, related_name="pagos")
     fecha_pago = models.DateField()
     monto = models.DecimalField(max_digits=12, decimal_places=2)
     forma_pago = models.CharField(
         max_length=30,
-        choices=[('transferencia', 'Transferencia'),('efectivo', 'Efectivo') , ('cheque', 'Cheque'), ('tarjeta', 'Tarjeta')],
-        default='transferencia'
+        choices=[
+            ("transferencia", "Transferencia"),
+            ("efectivo", "Efectivo"),
+            ("cheque", "Cheque"),
+            ("tarjeta", "Tarjeta"),
+        ],
+        default="transferencia",
     )
     referencia = models.CharField(max_length=100, blank=True, null=True)
-    comprobante = models.FileField(upload_to='comprobante_gastos/', blank=True, null=True)
+    comprobante = models.FileField(
+        upload_to="comprobante_gastos/", blank=True, null=True
+    )
     registrado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     class Meta:
-        ordering = ['-fecha_pago']
+        ordering = ["-fecha_pago"]
 
     def __str__(self):
-        return f'Pago de ${self.monto} para solicitud {self.gasto.id}'
-
-    
-  
+        return f"Pago de ${self.monto} para solicitud {self.gasto.id}"
