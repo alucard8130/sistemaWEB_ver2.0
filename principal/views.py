@@ -1,4 +1,4 @@
-#from turtle import st
+
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -30,11 +30,13 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from datetime import date
 import stripe
+from django.conf import settings
+from django.contrib.auth.models import User
 
-# stripe.api_key = settings.STRIPE_SECRET_KEY
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-# Create your views here.
+
 
 
 @login_required
@@ -462,12 +464,6 @@ def usuarios_demo(request):
 
 @csrf_exempt
 def stripe_webhook(request):
-    import stripe
-    from django.http import HttpResponse
-    from django.conf import settings
-    from .models import PerfilUsuario
-    from django.contrib.auth.models import User
-
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
@@ -545,8 +541,8 @@ def crear_sesion_pago(request):
         ],
         mode="subscription",
         success_url=request.build_absolute_uri("/bienvenida/?pago=ok"),
-        cancel_url=request.build_absolute_uri("/bienvenida/"),
-        client_reference_id=str(request.user.id),  # Para identificar al usuario
+        cancel_url=request.build_absolute_uri("./"),
+        client_reference_id=str(request.user.id),  
         customer_email=request.user.email,
     )
     return JsonResponse({"id": session.id})

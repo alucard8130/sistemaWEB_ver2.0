@@ -103,22 +103,19 @@ class GastoForm(forms.ModelForm):
         modo = kwargs.pop("modo", None)
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        # Solo superusuario puede elegir empresa, los demás sólo la propia
+        self.fields['comprobante'].disabled = True
+
         if not user or not user.is_superuser:
             self.fields["empresa"].widget = forms.HiddenInput()
 
-        # self.fields['empresa'].required = False
         self.fields["descripcion"].required = True
-        # self.fields['comprobante'].required = True
-
-        # Por defecto vacíos si no hay empresa
+    
         self.fields["proveedor"].queryset = Proveedor.objects.none()
         self.fields["empleado"].queryset = Empleado.objects.none()
 
         if modo == "editar":
-            # self.fields['origen_tipo'].disabled = True
-            # self.fields['origen_tipo'].widget = forms.HiddenInput()
             self.fields["proveedor"].disabled = True
+            self.fields['comprobante'].disabled = True
 
         if user:
             if user.is_superuser:
@@ -138,7 +135,6 @@ class GastoForm(forms.ModelForm):
                         empresa=empresa
                     )
 
-    # si se selecciona proveedor, empleado no es requerido y viceversa
     def clean(self):
         cleaned_data = super().clean()
         proveedor = cleaned_data.get("proveedor")
@@ -149,7 +145,7 @@ class GastoForm(forms.ModelForm):
             self.add_error("proveedor", "Debes seleccionar un proveedor.")
         if origen_tipo == "empleado" and not empleado:
             self.add_error("empleado", "Debes seleccionar un empleado.")
-        # Opcional: si quieres que uno de los dos sea obligatorio siempre
+
         if not proveedor and not empleado:
             raise forms.ValidationError("Debes seleccionar un proveedor o un empleado.")
         return cleaned_data
@@ -173,6 +169,10 @@ class PagoGastoForm(forms.ModelForm):
             ),
         }
 
+    def initialize(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        self.fields['comprobante'].disabled = True
 
 class GastosCargaMasivaForm(forms.Form):
     archivo = forms.FileField(label="Archivo Excel (.xlsx)")

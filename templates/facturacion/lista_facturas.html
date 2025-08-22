@@ -92,7 +92,6 @@
                     <a href="{% url 'crear_factura' %}" class="btn btn-crear">
                         <i class="bi bi-plus-circle me-1"></i> Nueva Cuota
                     </a>
-                    <!--   <a href="{% url 'facturar_mes' %}" class="btn btn-warning mb-3">Generar facturación mensual</a>  -->
                     <a href="{% url 'exportar_lista_facturas_excel' %}?{% if request.GET %}{{ request.GET.urlencode }}{% endif %}" class="btn btn-outline-success">
                         <i class="bi bi-file-earmark-excel-fill"></i>
                         Exportar a Excel
@@ -120,7 +119,7 @@
                         <th>Concepto</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
-                        <th>CFDI</th>
+                        {% comment %} <th>CFDI</th> {% endcomment %}
                         <th>Historial</th>
                     </tr>
                 </thead>
@@ -160,8 +159,11 @@
                                 {% else %}
                                     <span class="text-muted"></span>
                                 {% endif %}
+                                <a href="{% url 'recibo_factura' factura.id %}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="bi bi-printer" title="Imprimir Documento"></i>
+                                        </a>
                             </td>
-                            <td>
+                            {% comment %} <td>
                                 {% if factura.cfdi and factura.cfdi|archivo_existe %}
                                     <a href="{{ factura.cfdi.url }}" target="_blank" class="btn btn-sm btn-outline-dark" title="CFDI">
                                         <i class="bi bi-file-earmark-pdf me-1"></i>
@@ -169,7 +171,7 @@
                                 {% elif factura.cfdi %}
                                     
                                 {% endif %}
-                            </td>
+                            </td> {% endcomment %}
                                 <td>
                                     <a href="{% url 'facturas_detalle' factura.id %}" class="btn btn-sm btn-outline-info" title="Ver">
                                         <i class="bi bi-eye me-1"></i> 

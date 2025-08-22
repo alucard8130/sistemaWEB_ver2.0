@@ -14,7 +14,6 @@ class FacturaForm(forms.ModelForm):
 
     class Meta:
         model = Factura
-        #fields = ['cliente', 'local', 'area_comun','tipo_cuota', 'fecha_vencimiento', 'monto', 'estatus','observaciones']
         fields = ['cliente', 'local', 'area_comun','tipo_cuota', 'fecha_vencimiento', 'monto','cfdi', 'observaciones']
         widgets = {
             'cliente': forms.Select(attrs={
@@ -54,6 +53,7 @@ class FacturaForm(forms.ModelForm):
         # campos no requeridos
         self.fields['local'].required = False
         self.fields['area_comun'].required = False
+        self.fields['cfdi'].disabled = True
 
         if self.user and not self.user.is_superuser:
             empresa = self.user.perfilusuario.empresa
@@ -110,6 +110,7 @@ class PagoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Monto no requerido desde el principio (el clean lo maneja)
         self.fields['monto'].required = False
+        self.fields['comprobante'].disabled = True
 
     def clean(self):
         cleaned_data = super().clean()
@@ -174,11 +175,11 @@ class FacturaEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Deshabilita el campo cliente para evitar edición
         self.fields['cliente'].disabled = True
         self.fields['estatus'].disabled = True
         self.fields['area_comun'].disabled = True
         self.fields['local'].disabled = True
+        self.fields['cfdi'].disabled = True
         
         
             
@@ -213,6 +214,8 @@ class FacturaOtrosIngresosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.fields['cfdi'].disabled = True
+
         if user and hasattr(user, 'perfilusuario'):
             empresa = user.perfilusuario.empresa
             self.fields['cliente'].queryset = Cliente.objects.filter(empresa=empresa)
@@ -250,6 +253,7 @@ class CobroForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Monto no requerido desde el principio (el clean lo maneja)
         self.fields['monto'].required = False
+        self.fields['comprobante'].disabled = True
 
 class TipoOtroIngresoForm(forms.ModelForm):
     class Meta:

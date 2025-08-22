@@ -292,7 +292,11 @@ def estado_resultados(request):
     meses_anios_set = set(
         (x["mes"], x["anio"]) for x in list(meses_anios) + list(meses_anios_otros)
     )
-    meses_anios_list = sorted(list(meses_anios_set), key=lambda x: (x[1], x[0]))
+    # Filtra tuplas donde mes o año sean None
+    meses_anios_list = [
+        t for t in meses_anios_set if t[0] is not None and t[1] is not None
+    ]
+    meses_anios_list = sorted(meses_anios_list, key=lambda x: (x[1], x[0]))
     meses_unicos = sorted(set(m for m, y in meses_anios_list if m))
     anios_unicos = sorted(set(y for m, y in meses_anios_list if y))
 
@@ -352,11 +356,17 @@ def estado_resultados(request):
         gastos = gastos.filter(empresa_id=empresa_id)
         gastos_caja_chica = gastos_caja_chica.filter(fondeo__empresa_id=empresa_id)
         vales_caja_chica = vales_caja_chica.filter(fondeo__empresa_id=empresa_id)
-    try:
-        empresa = Empresa.objects.get(id=empresa_id)
-        saldo_inicial = float(empresa.saldo_inicial or 0)
-        saldo_final = float(empresa.saldo_final or 0)
-    except Empresa.DoesNotExist:
+    if empresa_id and str(empresa_id).isdigit():
+        try:
+            empresa = Empresa.objects.get(id=empresa_id)
+            saldo_inicial = float(empresa.saldo_inicial or 0)
+            saldo_final = float(empresa.saldo_final or 0)
+        except Empresa.DoesNotExist:
+            empresa = None
+            saldo_inicial = 0
+            saldo_final = 0
+    else:
+        empresa = None
         saldo_inicial = 0
         saldo_final = 0
 

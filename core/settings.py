@@ -50,10 +50,10 @@ INSTALLED_APPS = [
     "caja_chica",
 ]
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-    "localhost",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+#     "localhost",
+# ]
 
 MIDDLEWARE = [
    #"debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -98,22 +98,22 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 # DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 
 #heroku
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.environ.get('DATABASE_URL')
+#     )
+# }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
@@ -195,11 +195,11 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_QUERYSTRING_AUTH = False
 
 
-SENTRY_DSN = os.getenv("SENTRY_DSN_KEY")
+# SENTRY_DSN = os.getenv("SENTRY_DSN_KEY")
 
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()],
-    traces_sample_rate=1.0,  # Puedes bajarlo a 0.1 si no quieres rastreo de performance
-    send_default_pii=True,  # Para capturar datos de usuario autenticado
-)
+# sentry_sdk.init(
+#     dsn=SENTRY_DSN,
+#     integrations=[DjangoIntegration()],
+#     traces_sample_rate=1.0,  # Puedes bajarlo a 0.1 si no quieres rastreo de performance
+#     send_default_pii=True,  # Para capturar datos de usuario autenticado
+# )
