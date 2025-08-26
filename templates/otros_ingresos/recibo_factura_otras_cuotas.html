@@ -3,7 +3,7 @@
     <html lang="es">
       <head>
         <meta charset="UTF-8" />
-        <title>Factura Cuotas</title>
+        <title>Factura otras Cuotas</title>
         <style>
           body {
             font-family: "Segoe UI", Arial, sans-serif;
@@ -118,11 +118,12 @@
             {% if empresa.email %}<p>Email: {{ empresa.email }}</p>{% endif %}
         </div>
               <div class="recibo-title" style="color: #d35400">
-          {% if factura.local %}      
+                FACTURA  OTRAS CUOTAS
+          {% comment %} {% if factura.local %}      
           FACTURA  CUOTA DE MANTENIMIENTO
           {% else %}
           FACTURA  CUOTA DE AREA COMUN
-          {% endif %}
+          {% endif %} {% endcomment %}
               </div>
               <div style="text-align: right; margin-bottom: 10px">
                 <img
@@ -157,32 +158,33 @@
                 </table>
               </div>
               <div class="datos-section">
-                <h4>Datos Ubicacion</h4>
-                <table>
+                <h4>Datos </h4>
+                {% comment %} <table>
                   {% if factura.local %}
                   <tr>
                     <td><strong>Local:</strong></td>
                     <td>{{ factura.local.numero }}</td>
-                  </tr>
+                  </tr> {% endcomment %}
                   <tr>
                     <td><strong>Referencia:</strong></td>
                     <td>{{ factura.local.referencia }}</td>
                   </tr>
-                  {% endif %} {% if factura.area_comun %}
+                    <div class="mb-3" >
+                  <tr>
+                    <td><strong>Tipo Cuota:</strong></td>
+                    <td>{{ factura.tipo_ingreso|title }}</td>
+                  </tr>
+                </div>
+                  {% comment %} {% endif %} {% if factura.area_comun %}
                   <tr>
                     <td><strong>Área Común:</strong></td>
                     <td>{{ factura.area_comun.numero }}</td>
-                  </tr>
-                  <tr>
+                  </tr> {% endcomment %}
+                  {% comment %} <tr>
                     <td><strong>Referencia:</strong></td>
                     <td>{{ factura.area_comun.referencia }}</td>
                   </tr>
-                  {% endif %}
-                  <tr>
-                    <td><strong>Tipo Cuota:</strong></td>
-                    <td>{{ factura.tipo_cuota|title }}</td>
-                  </tr>
-                </table>
+                  {% endif %} {% endcomment %}
               </div>
               <div class="datos-section">
                 <h4>Datos de la Factura</h4>
@@ -191,6 +193,7 @@
                     <th>Folio</th>
                     <th>Monto</th>
                     <th>Saldo</th>
+                    {% comment %} <th>Tipo Cuota</th> {% endcomment %}
                     {% comment %} <th>Fecha de Emisión</th> {% endcomment %}
                     <th>Fecha de Vencimiento</th>
                     <th>Concepto</th>
@@ -199,7 +202,8 @@
                   <tr>
                     <td>{{ factura.folio }}</td>
                     <td>${{ factura.monto|floatformat:2|intcomma }}</td>
-                    <td>${{ factura.saldo_pendiente|floatformat:2|intcomma }}</td>
+                    <td>${{ factura.saldo|floatformat:2|intcomma }}</td>
+                    {% comment %} <td>{{ factura.tipo_ingreso|title }}</td> {% endcomment %}
                     {% comment %} <td>{{ factura.fecha_emision|date:'d/m/Y' }}</td> {% endcomment %}
                     <td>{{ factura.fecha_vencimiento|date:'d/m/Y' }}</td>
                     <td>{{ factura.observaciones|title }}</td>
