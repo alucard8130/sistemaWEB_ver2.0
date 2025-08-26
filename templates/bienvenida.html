@@ -83,10 +83,11 @@ window.sentryOnLoad = function() {
     Recuerda que tu acceso demo es válido por 30 días.<br>
     <hr>
     <button id="stripe-checkout-btn" class="btn btn-success btn-sm w-100">
-      <a href="https://buy.stripe.com/fZueVfgqa8JCftu5732B202" class="text-white text-decoration-none">
+      <a href="https://buy.stripe.com/bJe6oJ5Lw1ha9562YV2B203" class="text-white text-decoration-none">
         <i class="bi bi-credit-card"></i> Suscribete ahora !!
       </a>
     </button>
+
 </div>
 <script src="https://js.stripe.com/v3/"></script>
 <script>
@@ -103,10 +104,6 @@ document.getElementById('stripe-checkout-btn').onclick = function() {
 
 {% if not es_demo %}
 <div class="container-fluid px-4 py-3 wide=100px">
-<!-- Botón para cancelar suscripción 
-<button id="cancelar-suscripcion-btn" class="btn btn-danger">
-    Cancelar suscripción
-</button>-->
 <script>
 document.getElementById('cancelar-suscripcion-btn').onclick = function() {
     fetch("{% url 'cancelar_suscripcion' %}", {
