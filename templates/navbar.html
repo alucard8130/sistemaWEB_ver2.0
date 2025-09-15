@@ -7,29 +7,17 @@
     -->
 
 <!-- 🔹 Top Navbar -->
-<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-navbar">
+<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-navbar" style="justify-content: flex-start;">
   <div class="container-fluid px-3">
     <!-- home button-->
-    <a
-      href="{% url 'bienvenida' %}"
-      class="btn btn-sm text-dark"
-      style="
-        background-color: transparent;
-        border: 1px solid transparent;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
-      "
-      onmouseover="this.style.borderColor='rgba(0, 123, 255, 0.4)'; this.style.boxShadow='0 0px 25px rgba(0, 123, 255, 0.3)';"
-      onmouseout="this.style.borderColor='transparent'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)';"
-    >
-      <i class="bi bi-house-fill me-1"></i> Inicio
-    </a>
+    
 
     <div
-      class="collapse navbar-collapse d-flex justify-content-between align-items-center"
+      class="collapse navbar-collapse d-flex  align-items-center"
       id="navbarOpciones"
+      style="justify-content: flex-start;"
     >
-      <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center ms-auto">
+      <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center ms-auto" style="justify-content: flex-start;">
         {% if request.user.is_superuser %}
         <li class="nav-item dropdown">
           <a
@@ -75,431 +63,150 @@
         </li>
         {% endif %}
 
-        <!-- Menús existentes, ajústalos si quieres anidar en catálogos -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            >Clientes</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'crear_cliente' %}"
-                >Nuevo Cliente</a
-              >
+          <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center" style="margin-right: 300px;">
+            <li class="nav-item">
+              <a href="{% url 'bienvenida' %}" class="nav-link d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inicio">
+                <i class="bi bi-house-door-fill me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_clientes' %}"
-                >Lista</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Clientes">
+                <i class="bi bi-people-fill me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'crear_cliente' %}">Nuevo Cliente</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_clientes' %}">Lista</a></li>
+                <li><a class="dropdown-item" href="{% url 'clientes_inactivos' %}">Inactivos</a></li>
+              </ul>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'clientes_inactivos' %}"
-                >Inactivos</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Propiedades">
+                <i class="bi bi-building me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'crear_local' %}">Nueva Propiedad</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_locales' %}">Lista Propiedades</a></li>
+                <li><a class="dropdown-item" href="{% url 'locales_inactivos' %}">Inactivas</a></li>
+                <li><a class="dropdown-item" href="{% url 'incrementar_c_locales' %}">Incrementar Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'carga_masiva_locales' %}">Carga Masiva</a></li>
+              </ul>
             </li>
-            <!--  {% if request.user.is_superuser %}
-                            <li><a class="dropdown-item" href="{% url 'carga_masiva_clientes' %}">Carga Masiva</a></li>
-                        {% endif %}  -->
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Propiedades</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'crear_local' %}"
-                >Nueva Propiedad</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Áreas Comunes">
+                <i class="bi bi-tree-fill me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'crear_area' %}">Nueva Área</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_areas' %}">Lista</a></li>
+                <li><a class="dropdown-item" href="{% url 'areas_inactivas' %}">Inactivos</a></li>
+                <li><a class="dropdown-item" href="{% url 'incrementar_c_areas' %}">Incrementar Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'carga_masiva_areas' %}">Carga Masiva</a></li>
+              </ul>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_locales' %}"
-                >Lista Propiedades</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Ingresos Cuotas">
+                <i class="bi bi-cash-coin me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'crear_factura' %}">Registrar Cuota</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_facturas' %}">Lista Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'facturar_mes' %}">Carga Mensual Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'pagos_por_origen' %}?tipo=local">Reporte Cobros Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard_pagos' %}">Dashboard</a></li>
+              </ul>
             </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'locales_inactivos' %}"
-                >Inactivas</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Otros Ingresos">
+                <i class="bi bi-coin me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'crear_factura_otros_ingresos' %}">Registrar otra Cuota</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_facturas_otros_ingresos' %}">Lista otras Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'reporte_cobros_otros_ingresos' %}">Reporte Cobros otras Cuotas</a></li>
+              </ul>
             </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'incrementar_c_locales' %}"
-                >Incrementar Cuotas</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Cartera Adeudos">
+                <i class="bi bi-wallet2 me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'cartera_vencida' %}">Cartera Vencida</a></li>
+                <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}">Carga Cartera</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard_saldos' %}">Dashboard</a></li>
+              </ul>
             </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'carga_masiva_locales' %}"
-                >Carga Masiva</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Catálogos">
+                <i class="bi bi-journal-bookmark-fill me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'proveedor_lista' %}">Proveedores</a></li>
+                <li><a class="dropdown-item" href="{% url 'empleado_lista' %}">Empleados</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url 'tipo_gasto_crear'%}">Alta tipo gasto</a></li>
+                <li><a class="dropdown-item" href="{% url 'tipos_gasto_lista'%}">Lista tipo gasto</a></li>
+              </ul>
             </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Áreas Comunes</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'crear_area' %}"
-                >Nueva Área</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Gastos">
+                <i class="bi bi-wallet me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'gasto_nuevo' %}">Registrar Gasto</a></li>
+                <li><a class="dropdown-item" href="{% url 'gastos_lista' %}">Lista Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'reporte_pagos_gastos' %}">Reporte Pagos Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'dashboard_pagos_gastos' %}">Dashboard</a></li>
+              </ul>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_areas' %}">Lista</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Caja Chica">
+               <i class="bi bi-cash me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'lista_fondeos' %}">Lista Fondeos</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_gastos_caja_chica' %}">Lista Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_vales_caja_chica' %}">Lista Vales</a></li>
+                <li><a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}">Fondear Caja Chica</a></li>
+                <li><a class="dropdown-item" href="{% url 'registrar_gasto_caja_chica' %}">Registro de Gasto</a></li>
+                <li><a class="dropdown-item" href="{% url 'generar_vale_caja' %}">Registro de Vales</a></li>
+              </ul>
             </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'areas_inactivas' %}"
-                >Inactivos</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Presupuestos">
+                <i class="bi bi-bar-chart-fill me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'matriz_presupuesto'%}">Matriz Presupuesto Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'matriz_presupuesto_ingresos' %}">Matriz Presupuesto Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'carga_masiva_presupuestos' %}">Carga Presupuesto Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'carga_masiva_presupuesto_ingresos' %}">Carga Presupuesto Cuotas</a></li>
+              </ul>
             </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'incrementar_c_areas' %}"
-                >Incrementar Cuotas</a
-              >
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'carga_masiva_areas' %}"
-                >Carga Masiva</a
-              >
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Cuotas</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'crear_factura' %}"
-                >Registrar Cuota</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_facturas' %}"
-                >Lista Cuotas</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'facturar_mes' %}"
-                >Carga Mensual Cuotas</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'pagos_por_origen' %}?tipo=local"
-                >Reporte Cobros Cuotas</a
-              >
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'dashboard_pagos' %}"
-                >Dashboard</a
-              >
-            </li>
-
-            {% if request.user.is_superuser %}
-            <!--    <li><a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}">Carga Masiva</a></li> -->
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'carga_masiva_facturas_cobradas' %}"
-                >Carga Cuotas Cobradas</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-        </li>
-        <!-- MENÚ otros ingresos -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Otras Cuotas</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'crear_factura_otros_ingresos' %}"
-                >Registrar otra Cuota</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'lista_facturas_otros_ingresos' %}"
-                >Lista otras Cuotas</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'reporte_cobros_otros_ingresos' %}"
-                >Reporte Cobros otras Cuotas</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Reportes">
+                <i class="bi bi-graph-up-arrow me-2" style="font-size: 2.2rem;"></i>
+                <span></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'estado_resultados' %}">Estado Resultados</a></li>
+                <li><a class="dropdown-item" href="{% url 'reporte_presupuesto_vs_gasto' %}">Comparativo Ppto vs Gastos</a></li>
+                <li><a class="dropdown-item" href="{% url 'reporte_presupuesto_vs_ingreso' %}">Comparativo Ppto vs Cuotas</a></li>
+                <li><a class="dropdown-item" href="{% url 'reporte_ingresos_vs_gastos' %}">Dashboard Cuotas y Gastos</a></li>
+              </ul>
             </li>
           </ul>
-          <!-- MENÚ cartera -->
-        </li>
-
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Cartera Vencida</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'cartera_vencida' %}"
-                >Cartera Vencida</a
-              >
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'carga_masiva_facturas' %}"
-                >Carga Cartera</a
-              >
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="{% url 'dashboard_saldos' %}"
-                >Dashboard</a
-              >
-            </li>
-          </ul>
-        </li>
-        <!-- MENÚ CATÁLOGOS -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Catálogos</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'proveedor_lista' %}"
-                >Proveedores</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'empleado_lista' %}"
-                >Empleados</a
-              >
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            {% if request.user.is_superuser %}
-            <li>
-              <a class="dropdown-item" href="{% url 'subgrupos_gasto_lista' %}"
-                >Alta subgrupo gasto</a
-              >
-            </li>
-            {% endif %}
-            <li>
-              <a class="dropdown-item" href="{% url 'tipo_gasto_crear'%}"
-                >Alta tipo gasto</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'tipos_gasto_lista'%}"
-                >Lista tipo gasto</a
-              >
-            </li>
-
-            <!-- Agrega aquí más catálogos si lo deseas -->
-          </ul>
-        </li>
-        <!-- MENÚ GASTOS -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Gastos</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'gasto_nuevo' %}"
-                >Registrar Gasto</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'gastos_lista' %}"
-                >Lista Gastos</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'reporte_pagos_gastos' %}"
-                >Reporte Pagos Gastos</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'dashboard_pagos_gastos' %}"
-                >Dashboard</a
-              >
-            </li>
-            {% if request.user.is_superuser %}
-            <li>
-              <a class="dropdown-item" href="{% url 'carga_masiva_gastos' %}"
-                >Carga Masiva Gastos</a
-              >
-            </li>
-
-            {% endif %}
-          </ul>
-        </li>
-        <!-- MENÚ CAJA CHICA -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Caja Chica</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_fondeos' %}"
-                >Lista Fondeos</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'lista_gastos_caja_chica' %}"
-                >Lista Gastos</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'lista_vales_caja_chica' %}"
-                >Lista Vales</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'fondeo_caja_chica' %}"
-                >Fondear Caja Chica</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'registrar_gasto_caja_chica' %}"
-                >Registro de Gasto</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'generar_vale_caja' %}"
-                >Registro de Vales</a
-              >
-            </li>
-          </ul>
-        </li>
-        <!-- MENÚ PPTOS -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Presupuesto</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'matriz_presupuesto'%}"
-                >Matriz Presupuesto Gastos</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'matriz_presupuesto_ingresos' %}"
-                >Matriz Presupuesto Cuotas</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'carga_masiva_presupuestos' %}"
-                >Carga Presupuesto Gastos</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'carga_masiva_presupuesto_ingresos' %}"
-                >Carga Presupuesto Cuotas</a
-              >
-            </li>
-          </ul>
-        </li>
-        <!-- MENÚ REPORTES -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            >Reportes</a
-          >
-          <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{% url 'estado_resultados' %}"
-                >Estado Resultados</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'reporte_presupuesto_vs_gasto' %}"
-                >Comparativo Ppto vs Gastos</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'reporte_presupuesto_vs_ingreso' %}"
-                >Comparativo Ppto vs Cuotas</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="{% url 'reporte_ingresos_vs_gastos' %}"
-                >Dashboard Cuotas y Gastos</a
-              >
-            </li>
-          </ul>
-        </li>
-      </ul>
+          
 
       <div class="d-flex align-items-center gap-3 ms-auto">
         <!-- Help Button -->
@@ -510,15 +217,15 @@
           data-bs-target="#modalAyuda"
           aria-label="Abrir ayuda"
         >
-          <i class="bi bi-question-circle-fill"></i>
-          <span>Ayuda</span>
+          <i class="bi bi-question-circle-fill" style="font-size: 2.2rem;" title="Ayuda"></i>
+          <span></span>
         </button>
 
         <!-- Logout button -->
         <form method="post" action="{% url 'logout' %}" class="mb-0">
           {% csrf_token %}
           <button type="submit" class="btn btn-primary btn-sm">
-            <i class="bi bi-box-arrow-right me-1"></i> Salir
+            <i class="bi bi-box-arrow-right me-1" style="font-size: 2.2rem;" title="Salir"></i>
           </button>
         </form>
       </div>
@@ -527,7 +234,9 @@
   <!-- Dark button -->
   <div class="d-flex align-items-center ms-auto">
     <button id="toggleDark" class="toggle-switch">
-      <div class="toggle-ball"><i class="bi bi-moon-fill"></i></div>
+      <div class="toggle-ball">
+        <i class="bi bi-moon-fill"></i>
+      </div>
     </button>
   </div>
 </nav>
